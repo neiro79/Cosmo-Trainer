@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CosmoTrainer – Impara i vocaboli</title>
+<meta name="description" content="CosmoTrainer è l'app per imparare i vocaboli delle lingue. Scarica la versione per Windows, iOS e Android.">
+<style>
+  :root {
+    --bg: #070a1c;
+    --bg-2: #0e1333;
+    --card: rgba(255,255,255,.06);
+    --border: rgba(255,255,255,.12);
+    --text: #eef0ff;
+    --muted: #a9afd6;
+    --accent: #7c5cff;
+    --accent-2: #2dd4ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(124,92,255,.35), transparent 60%),
+      radial-gradient(700px 400px at 0% 20%, rgba(45,212,255,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg), var(--bg-2));
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 22px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; letter-spacing: .3px; }
+  .logo-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 70%);
+    box-shadow: 0 0 18px rgba(124,92,255,.7);
+  }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-size: .95rem; }
+  nav a:hover { color: var(--text); }
+
+  .hero { text-align: center; padding: 70px 0 50px; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.1; font-weight: 800; margin-bottom: 18px;
+    background: linear-gradient(90deg, #fff, var(--accent-2) 60%, var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { max-width: 620px; margin: 0 auto 30px; color: var(--muted); font-size: 1.1rem; }
+  .btn {
+    display: inline-block; padding: 14px 28px; border-radius: 999px; text-decoration: none; font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff;
+    box-shadow: 0 8px 30px rgba(124,92,255,.4); transition: transform .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+
+  section { padding: 50px 0; }
+  h2 { font-size: 1.7rem; text-align: center; margin-bottom: 8px; }
+  .sub { text-align: center; color: var(--muted); margin-bottom: 34px; }
+
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 24px;
+    backdrop-filter: blur(6px);
+  }
+  .card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .card h3 { font-size: 1.1rem; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: .95rem; }
+
+  .dl-card { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .dl-card .icon { font-size: 2.4rem; }
+  .dl-card .btn { margin-top: auto; }
+  .note { font-size: .82rem; color: var(--muted); }
+
+  .langs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .chip { padding: 8px 18px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); font-size: .95rem; }
+
+  footer { padding: 40px 0; text-align: center; color: var(--muted); font-size: .88rem; border-top: 1px solid var(--border); margin-top: 30px; }
+
+  @media (max-width: 560px) { nav { display: none; } .hero { padding-top: 40px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="logo-dot"></span> CosmoTrainer</div>
+    <nav>
+      <a href="#funzioni">Funzioni</a>
+      <a href="#download">Download</a>
+      <a href="#lingue">Lingue</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="hero">
+      <h1>Allena il tuo vocabolario,<br>un passo alla volta.</h1>
+      <p>CosmoTrainer ti aiuta a imparare e ripassare i vocaboli delle lingue che ti interessano, da solo o insieme alla tua classe.</p>
+      <a class="btn" href="#download">Scarica l'app</a>
+    </div>
+
+    <section id="funzioni">
+      <h2>Cosa puoi fare</h2>
+      <p class="sub">Pensata per studiare con costanza, su qualsiasi dispositivo.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="icon">🧠</div>
+          <h3>Allenamento vocaboli</h3>
+          <p>Esercizi e ripassi per fissare le parole nuove e non dimenticarle.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🎓</div>
+          <h3>Classi</h3>
+          <p>Gli insegnanti creano le classi e seguono gli studenti, che si uniscono e studiano insieme.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🌍</div>
+          <h3>Interfaccia multilingua</h3>
+          <p>L'app è disponibile in italiano, inglese, tedesco, francese e spagnolo.</p>
+        </div>
+        <div class="card">
+          <div class="icon">☁️</div>
+          <h3>Sempre sincronizzato</h3>
+          <p>I tuoi progressi restano con te, su tutti i dispositivi.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <h2>Scarica CosmoTrainer</h2>
+      <p class="sub">Scegli la versione per il tuo dispositivo.</p>
+      <div class="grid">
+
+        <div class="card dl-card">
+          <div class="icon">🪟</div>
+          <h3>Windows</h3>
+          <p>Scarica il programma di installazione per Windows 10/11.</p>
+          <!-- TODO: sostituisci con il percorso reale del file (es. downloads/CosmoTrainer-Setup.exe) -->
+          <a class="btn" href="downloads/CosmoTrainer-Windows.zip" download>Scarica per Windows</a>
+          <span class="note">Versione 1.0.0</span>
+        </div>
+
+        <div class="card dl-card">
+          <div class="icon">🍎</div>
+          <h3>iOS</h3>
+          <p>Disponibile per iPhone e iPad.</p>
+          <!-- TODO: sostituisci con il link dell'App Store / TestFlight -->
+          <a class="btn" href="#" target="_blank" rel="noopener">Vai all'App Store</a>
+        </div>
+
+        <div class="card dl-card">
+          <div class="icon">🤖</div>
+          <h3>Android</h3>
+          <p>Disponibile per smartphone e tablet Android.</p>
+          <!-- TODO: sostituisci con il link di Google Play -->
+          <a class="btn" href="#" target="_blank" rel="noopener">Vai a Google Play</a>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="lingue">
+      <h2>Interfaccia in 5 lingue</h2>
+      <p class="sub">Usa CosmoTrainer nella lingua che preferisci.</p>
+      <div class="langs">
+        <span class="chip">🇮🇹 Italiano</span>
+        <span class="chip">🇬🇧 English</span>
+        <span class="chip">🇩🇪 Deutsch</span>
+        <span class="chip">🇫🇷 Français</span>
+        <span class="chip">🇪🇸 Español</span>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="y"></span> CosmoTrainer · Tutti i diritti riservati</div>
+</footer>
+
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
