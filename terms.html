@@ -1,61 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CosmoTrainer — Termini d'uso / Terms of Use</title>
+<title>CosmoTrainer – Termini d'uso</title>
+<meta name="description" content="Le condizioni per usare l'app CosmoTrainer.">
+<!-- fuori dai risultati dei motori di ricerca: la pagina resta pubblica
+     (la aprono l'app e gli store), ma non va cercata. Non va bloccata
+     anche in robots.txt, o il motore non leggerebbe questa riga -->
+<meta name="robots" content="noindex">
 <!--
-  BOZZA DA COMPLETARE E DA FAR VALIDARE.
-  Tutto ciò che è dentro <span class="todo">…</span> va sostituito.
-  Le regole sui contenuti (sezione "Che cosa non è ammesso") servono anche
-  alla revisione dell'App Store: Apple chiede che chi pubblica contenuti
-  accetti termini che non tollerano contenuti offensivi o utenti molesti.
+  Si carica nella radice del sito, accanto a index.html:
+  https://www.cosmo-trainer.com/terms.html
+
+  La lingua è quella scelta sul sito: index.html la passa con ?lang= e la
+  salva nel browser (ct_lang); l'app la passa con ?lang=. Senza nessuna
+  delle due vale quella del browser, e altrimenti l'inglese.
 -->
+<script>
+  (function () {
+    var ok = { it: 1, en: 1, de: 1, fr: 1, es: 1 }, c = null;
+    try { c = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+    if (!ok[c]) { try { c = localStorage.getItem('ct_lang'); } catch (e) {} }
+    if (!ok[c]) c = (navigator.language || '').slice(0, 2).toLowerCase();
+    if (!ok[c]) c = 'en';
+    document.documentElement.setAttribute('data-lang', c);
+    document.documentElement.lang = c;
+  })();
+</script>
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; padding: 32px 20px;
-    background: #0B1022; color: #E3E5F5;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    line-height: 1.6;
+  :root {
+    --bg: #070a1c; --bg-2: #0e1333;
+    --card: rgba(255,255,255,.06); --border: rgba(255,255,255,.12);
+    --text: #eef0ff; --muted: #a9afd6;
+    --accent: #7c5cff; --accent-2: #2dd4ff;
   }
-  main { max-width: 760px; margin: 0 auto; }
-  h1 { color: #F2B33D; font-size: 1.6rem; margin-bottom: 4px; }
-  h2 { color: #B8A3FF; font-size: 1.1rem; margin-top: 32px; }
-  a { color: #8EB4FF; }
-  ul { padding-left: 20px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(124,92,255,.35), transparent 60%),
+      radial-gradient(700px 400px at 0% 20%, rgba(45,212,255,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg), var(--bg-2));
+    background-attachment: fixed;
+    color: var(--text); line-height: 1.65; min-height: 100vh;
+    overflow-wrap: break-word;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 22px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem;
+          color: var(--text); text-decoration: none; }
+  .logo-dot { width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 70%);
+    box-shadow: 0 0 18px rgba(124,92,255,.7); }
+
+  /* il menu delle lingue, lo stesso di index.html */
+  .lang-menu { position: relative; }
+  .lang-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text); font: inherit;
+    font-size: .92rem; font-weight: 600; cursor: pointer; }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"] { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.1); }
+  .lang-btn:focus-visible, .lang-list button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  .ico-tr { width: 20px; height: 20px; flex: none; }
+  .lang-btn .chev { width: 18px; height: 18px; color: var(--muted); transition: transform .15s; }
+  .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .lang-list { position: absolute; right: 0; top: calc(100% + 8px); min-width: 200px; list-style: none; padding: 6px;
+    border-radius: 14px; background: #141a45; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,.5); z-index: 50; }
+  .lang-list[hidden] { display: none; }
+  .lang-list button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0;
+    border-radius: 10px; background: transparent; color: var(--text); font: inherit; font-size: .95rem; text-align: left; cursor: pointer; }
+  .lang-list button:hover { background: rgba(255,255,255,.08); }
+  .lang-list li[aria-selected="true"] button { background: rgba(124,92,255,.22); font-weight: 700; }
+  .lang-list .fl { font-size: 1.15rem; }
+  .lang-list .tick { margin-left: auto; width: 18px; height: 18px; color: var(--accent-2); visibility: hidden; }
+  .lang-list li[aria-selected="true"] .tick { visibility: visible; }
+
+  /* una lingua alla volta; senza JavaScript si vedono tutte */
+  html[data-lang] article[lang] { display: none; }
+  html[data-lang="it"] article[lang="it"], html[data-lang="en"] article[lang="en"],
+  html[data-lang="de"] article[lang="de"], html[data-lang="fr"] article[lang="fr"],
+  html[data-lang="es"] article[lang="es"] { display: block; }
+
+  main { padding: 10px 0 60px; }
+  article { background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+            padding: 28px 24px; margin-bottom: 28px; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.2; margin-bottom: 6px; }
+  h2 { font-size: 1.1rem; color: var(--accent-2); margin: 28px 0 8px; }
+  p + p { margin-top: 10px; }
+  ul { padding-left: 20px; margin-top: 6px; }
   li { margin: 6px 0; }
-  .muted { color: #9095B8; font-size: 0.9rem; }
+  a { color: var(--accent-2); }
+  .updated { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .95rem; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--border);
+           overflow-wrap: anywhere; }
+  th { color: var(--muted); font-weight: 600; }
   .todo { background: #F2B33D; color: #0B1022; padding: 0 4px; border-radius: 4px; }
-  hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; }
+  footer { color: var(--muted); font-size: .85rem; text-align: center; padding: 0 0 40px; }
+  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-bottom: 8px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); text-decoration: underline; }
 </style>
 </head>
 <body>
-<main>
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html" data-keep-lang><span class="logo-dot"></span>CosmoTrainer</a>
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="langList">
+        <svg class="ico-tr" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+        <span id="langCur"></span>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <ul class="lang-list" id="langList" role="listbox" hidden></ul>
+    </div>
+  </div>
+</header>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Termini d'uso · ultimo aggiornamento:
-  <span class="todo">DATA</span></p>
+<main class="wrap">
 
-  <h2>Il servizio</h2>
+<article lang="it">
+  <h1>Termini d'uso</h1>
+  <p class="updated">Ultimo aggiornamento: 11 ottobre 2026</p>
+
+  <h2>1. Il servizio</h2>
   <p>CosmoTrainer è un'app per imparare le lingue con vocabolari, esercizi,
-  lezioni e classi. È fornita da <span class="todo">NOME / RAGIONE
-  SOCIALE</span> (contatto: <span class="todo">EMAIL</span>). Usando l'app
-  accetti questi termini e dichiari di aver letto
-  l'<a href="privacy.html">informativa privacy</a>.</p>
+  lezioni e classi. È fornita da Marco Suffi, Zurigo, Svizzera
+  (contatto: <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>).
+  Usando l'app accetti questi termini e dichiari di aver letto
+  l'<a href="privacy.html" data-keep-lang>informativa sulla privacy</a>.</p>
 
-  <h2>Chi può usarla</h2>
+  <h2>2. Chi può usarla</h2>
   <p>Devi avere almeno <strong>14 anni</strong>. Sei responsabile di quello che
   avviene con il tuo account: non condividere la password.</p>
 
-  <h2>I contenuti che pubblichi</h2>
+  <h2>3. I contenuti che pubblichi</h2>
   <p>Quello che crei resta tuo. Se lo rendi pubblico, permetti agli altri
   utenti di vederlo, usarlo per studiare, salvarlo e inserirlo nelle loro
   lezioni e classi, dentro CosmoTrainer. Se elimini l'account, i contenuti
   pubblici restano disponibili in forma anonima. Pubblica solo ciò che hai il
   diritto di pubblicare.</p>
 
-  <h2>Che cosa non è ammesso</h2>
+  <h2>4. Che cosa non è ammesso</h2>
   <p><strong>Non tolleriamo contenuti offensivi né utenti molesti.</strong> Nei
   contenuti, nei commenti e nei nomi utente non sono ammessi:</p>
   <ul>
@@ -67,110 +154,508 @@
     <li>dati personali di altre persone;</li>
     <li>materiale che viola diritti d'autore o altri diritti di terzi.</li>
   </ul>
-  <p>Ogni contenuto e commento si può <strong>segnalare</strong> dal suo menu,
-  e ogni utente si può <strong>bloccare</strong>. Esaminiamo le segnalazioni
-  entro <span class="todo">24 ORE / N GIORNI</span>: possiamo rimuovere i
-  contenuti che violano queste regole e sospendere o chiudere gli account
-  responsabili.</p>
+  <p>Ogni contenuto e ogni commento si può <strong>segnalare</strong> dal suo
+  menu, e ogni utente si può <strong>bloccare</strong>. Esaminiamo le
+  segnalazioni <strong>entro 48 ore</strong>: rimuoviamo i contenuti che violano
+  queste regole e possiamo sospendere o chiudere gli account responsabili.</p>
 
-  <h2>Classi</h2>
+  <h2>5. Classi</h2>
   <p>Gli insegnanti possono creare classi e assegnare materiali. Chi si iscrive
   a una classe accetta che l'insegnante veda i suoi progressi su quei
   materiali, come descritto nell'informativa. Gli insegnanti si impegnano a
   usare queste informazioni solo per la didattica.</p>
 
-  <h2>Lezione magica</h2>
-  <p>Le lezioni magiche sono generate da un modello di intelligenza
-  artificiale e possono contenere errori: controllale prima di usarle per
-  insegnare.</p>
+  <h2>6. Lezione magica</h2>
+  <p>Lezioni e vocabolari magici sono generati da un modello di intelligenza
+  artificiale e possono contenere errori: controllali prima di usarli per
+  insegnare. Da ospite se ne può creare uno; per crearne altri serve un
+  account.</p>
 
-  <h2>Premium</h2>
+  <h2>7. Premium</h2>
   <ul>
     <li>Il Premium è un abbonamento mensile o annuale, acquistato tramite Google
     Play o l'App Store, al prezzo mostrato nell'app prima dell'acquisto.</li>
     <li>Si rinnova automaticamente alla scadenza, salvo disdetta almeno 24 ore
-    prima, dalle impostazioni dell'abbonamento del tuo store.</li>
-    <li>Se è prevista una prova gratuita, non paghi nulla disdicendo prima
-    della sua fine.</li>
+    prima, dalle impostazioni degli abbonamenti del tuo store.</li>
+    <li>Se è prevista una prova gratuita, non paghi nulla disdicendo prima della
+    sua fine.</li>
     <li>Pagamenti e rimborsi seguono le regole dello store da cui hai
-    acquistato.</li>
+    acquistato. Eliminare l'account non disdice l'abbonamento: va disdetto
+    nello store.</li>
   </ul>
 
-  <h2>Pubblicità</h2>
+  <h2>8. Pubblicità</h2>
   <p>Chi non è Premium può sbloccare alcune lezioni guardando un breve video
   pubblicitario.</p>
 
-  <h2>Responsabilità</h2>
+  <h2>9. Responsabilità</h2>
   <p>Facciamo del nostro meglio perché l'app funzioni e i contenuti siano
   corretti, ma il servizio è fornito così com'è. Nei limiti consentiti dalla
   legge non rispondiamo dei danni indiretti derivanti dall'uso dell'app né dei
   contenuti pubblicati dagli utenti.</p>
 
-  <h2>Modifiche e chiusura</h2>
+  <h2>10. Modifiche e chiusura dell'account</h2>
   <p>Possiamo aggiornare questi termini; le modifiche rilevanti saranno
   comunicate nell'app. Puoi smettere di usare l'app ed eliminare l'account in
-  qualsiasi momento.</p>
+  qualsiasi momento, dal Profilo.</p>
 
-  <h2>Legge applicabile</h2>
-  <p><span class="todo">LEGGE E FORO COMPETENTE</span>, fatti salvi i diritti
-  inderogabili dei consumatori.</p>
+  <h2>11. Legge applicabile e foro</h2>
+  <p>Si applica il diritto svizzero. Foro competente: Zurigo, Svizzera. Restano
+  salvi i diritti inderogabili che la legge del tuo paese ti riconosce come
+  consumatore, compreso quello di rivolgerti ai giudici del luogo in cui
+  vivi.</p>
+</article>
 
-  <hr>
+<article lang="en">
+  <h1>Terms of Use</h1>
+  <p class="updated">Last updated: October 11, 2026</p>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Terms of Use · last updated: <span class="todo">DATE</span></p>
-
-  <h2>The service</h2>
+  <h2>1. The service</h2>
   <p>CosmoTrainer is a language-learning app with vocabularies, exercises,
-  lessons and classes, provided by <span class="todo">NAME / COMPANY</span>
-  (contact: <span class="todo">EMAIL</span>). By using the app you accept these
-  terms and confirm you have read the <a href="privacy.html">privacy
-  policy</a>.</p>
+  lessons and classes, provided by Marco Suffi, Zurich, Switzerland (contact:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>).
+  By using the app you accept these terms and confirm you have read the
+  <a href="privacy.html" data-keep-lang>privacy policy</a>.</p>
 
-  <h2>Eligibility</h2>
+  <h2>2. Eligibility</h2>
   <p>You must be at least <strong>14 years old</strong>. You are responsible
-  for your account.</p>
+  for what happens with your account: do not share your password.</p>
 
-  <h2>Your content</h2>
+  <h2>3. Your content</h2>
   <p>What you create stays yours. If you make it public, you allow other users
   to view it, study with it, save it and add it to their lessons and classes
   within CosmoTrainer. If you delete your account, public content remains
   available anonymously. Only publish what you have the right to publish.</p>
 
-  <h2>What is not allowed</h2>
+  <h2>4. What is not allowed</h2>
   <p><strong>There is no tolerance for objectionable content or abusive
-  users.</strong> Content, comments and usernames must not contain insults,
-  harassment, threats or bullying; discrimination or hate speech; sexual,
-  violent or otherwise inappropriate content for teenagers; illegal activity,
-  spam or unsolicited advertising; other people's personal data; material that
-  infringes copyright or other rights.</p>
+  users.</strong> Content, comments and usernames must not contain:</p>
+  <ul>
+    <li>insults, harassment, threats or bullying;</li>
+    <li>discrimination or hate speech;</li>
+    <li>sexual, violent or otherwise inappropriate content for teenagers;</li>
+    <li>illegal activity, spam or unsolicited advertising;</li>
+    <li>other people's personal data;</li>
+    <li>material that infringes copyright or other rights.</li>
+  </ul>
   <p>Any content or comment can be <strong>reported</strong> from its menu, and
-  any user can be <strong>blocked</strong>. We review reports within
-  <span class="todo">24 HOURS / N DAYS</span> and may remove content and
-  suspend or terminate the accounts responsible.</p>
+  any user can be <strong>blocked</strong>. We review reports <strong>within
+  48 hours</strong>, remove content that breaks these rules, and may suspend or
+  terminate the accounts responsible.</p>
 
-  <h2>Classes</h2>
-  <p>Students who join a class accept that the teacher sees their progress on
-  the class materials, as described in the privacy policy. Teachers use this
-  information for teaching only.</p>
+  <h2>5. Classes</h2>
+  <p>Teachers can create classes and assign materials. Students who join a
+  class accept that the teacher sees their progress on those materials, as
+  described in the privacy policy. Teachers use this information for teaching
+  only.</p>
 
-  <h2>Magic lesson</h2>
-  <p>Magic lessons are generated by an AI model and may contain mistakes.</p>
+  <h2>6. Magic lesson</h2>
+  <p>Magic lessons and vocabularies are generated by an AI model and may
+  contain mistakes: check them before using them for teaching. Guests can
+  create one; creating more requires an account.</p>
 
-  <h2>Premium</h2>
-  <p>Premium is a monthly or yearly subscription purchased through Google Play
-  or the App Store at the price shown in the app. It renews automatically
-  unless cancelled at least 24 hours before renewal in your store's
-  subscription settings. If a free trial is offered, you are not charged if you
-  cancel before it ends. Payments and refunds follow the rules of the store you
-  bought from.</p>
+  <h2>7. Premium</h2>
+  <ul>
+    <li>Premium is a monthly or yearly subscription purchased through Google
+    Play or the App Store, at the price shown in the app before purchase.</li>
+    <li>It renews automatically unless cancelled at least 24 hours before
+    renewal, in your store's subscription settings.</li>
+    <li>If a free trial is offered, you are not charged if you cancel before it
+    ends.</li>
+    <li>Payments and refunds follow the rules of the store you bought from.
+    Deleting your account does not cancel the subscription: cancel it in the
+    store.</li>
+  </ul>
 
-  <h2>Liability, changes, law</h2>
-  <p>The service is provided as is, to the extent permitted by law. We may
-  update these terms and will announce significant changes in the app.
-  Governing law: <span class="todo">LAW AND JURISDICTION</span>, without
-  prejudice to mandatory consumer rights.</p>
+  <h2>8. Ads</h2>
+  <p>Non-Premium users can unlock some lessons by watching a short video ad.</p>
+
+  <h2>9. Liability</h2>
+  <p>We do our best to keep the app working and its content correct, but the
+  service is provided as is. To the extent permitted by law, we are not liable
+  for indirect damages arising from the use of the app or for content published
+  by users.</p>
+
+  <h2>10. Changes and account closure</h2>
+  <p>We may update these terms and will announce significant changes in the
+  app. You can stop using the app and delete your account at any time, from
+  your Profile.</p>
+
+  <h2>11. Governing law and jurisdiction</h2>
+  <p>Swiss law applies. Place of jurisdiction: Zurich, Switzerland. This does
+  not affect the mandatory rights you have as a consumer under the law of your
+  country, including the right to bring proceedings where you live.</p>
+</article>
+
+<article lang="de">
+  <h1>Nutzungsbedingungen</h1>
+  <p class="updated">Zuletzt aktualisiert: 11. Oktober 2026</p>
+
+  <h2>1. Der Dienst</h2>
+  <p>CosmoTrainer ist eine App zum Sprachenlernen mit Wortschätzen, Übungen,
+  Lektionen und Klassen. Sie wird von Marco Suffi, Zürich, Schweiz,
+  bereitgestellt (Kontakt:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>).
+  Mit der Nutzung der App akzeptierst du diese Bedingungen und bestätigst, die
+  <a href="privacy.html" data-keep-lang>Datenschutzerklärung</a> gelesen zu
+  haben.</p>
+
+  <h2>2. Wer sie nutzen darf</h2>
+  <p>Du musst mindestens <strong>14 Jahre</strong> alt sein. Du bist
+  verantwortlich für das, was mit deinem Konto geschieht: Gib dein Passwort
+  nicht weiter.</p>
+
+  <h2>3. Deine Inhalte</h2>
+  <p>Was du erstellst, bleibt deins. Wenn du es veröffentlichst, erlaubst du
+  anderen Nutzern, es innerhalb von CosmoTrainer anzusehen, damit zu lernen, es
+  zu speichern und in ihre Lektionen und Klassen aufzunehmen. Wenn du dein Konto
+  löschst, bleiben öffentliche Inhalte anonym verfügbar. Veröffentliche nur, was
+  du veröffentlichen darfst.</p>
+
+  <h2>4. Was nicht erlaubt ist</h2>
+  <p><strong>Wir dulden keine anstößigen Inhalte und keine belästigenden
+  Nutzer.</strong> In Inhalten, Kommentaren und Benutzernamen ist nicht
+  erlaubt:</p>
+  <ul>
+    <li>Beleidigungen, Belästigung, Drohungen, Mobbing;</li>
+    <li>Diskriminierung oder Aufrufe zu Hass;</li>
+    <li>sexuelle, gewalttätige oder sonst für Jugendliche ungeeignete
+    Inhalte;</li>
+    <li>illegale Aktivitäten, Spam, unerwünschte Werbung;</li>
+    <li>Personendaten anderer;</li>
+    <li>Material, das Urheberrechte oder andere Rechte Dritter verletzt.</li>
+  </ul>
+  <p>Jeder Inhalt und jeder Kommentar kann über sein Menü
+  <strong>gemeldet</strong> und jeder Nutzer <strong>blockiert</strong> werden.
+  Wir prüfen Meldungen <strong>innerhalb von 48 Stunden</strong>: Wir entfernen
+  Inhalte, die gegen diese Regeln verstoßen, und können die verantwortlichen
+  Konten sperren oder schließen.</p>
+
+  <h2>5. Klassen</h2>
+  <p>Lehrpersonen können Klassen erstellen und Materialien zuweisen. Wer einer
+  Klasse beitritt, akzeptiert, dass die Lehrperson die Fortschritte bei diesen
+  Materialien sieht, wie in der Datenschutzerklärung beschrieben. Lehrpersonen
+  verpflichten sich, diese Informationen nur für den Unterricht zu nutzen.</p>
+
+  <h2>6. Magische Lektion</h2>
+  <p>Magische Lektionen und Wortschätze werden von einem KI-Modell erzeugt und
+  können Fehler enthalten: Prüfe sie, bevor du sie im Unterricht verwendest.
+  Als Gast kannst du eine erstellen; für weitere brauchst du ein Konto.</p>
+
+  <h2>7. Premium</h2>
+  <ul>
+    <li>Premium ist ein Monats- oder Jahresabo, das über Google Play oder den App
+    Store zu dem Preis abgeschlossen wird, der vor dem Kauf in der App angezeigt
+    wird.</li>
+    <li>Es verlängert sich automatisch, wenn du es nicht spätestens 24 Stunden
+    vor der Verlängerung in den Abo-Einstellungen deines Stores kündigst.</li>
+    <li>Wenn ein kostenloser Test angeboten wird, zahlst du nichts, wenn du vor
+    dessen Ende kündigst.</li>
+    <li>Zahlungen und Rückerstattungen richten sich nach den Regeln des Stores,
+    in dem du gekauft hast. Das Löschen des Kontos kündigt das Abo nicht:
+    Kündige es im Store.</li>
+  </ul>
+
+  <h2>8. Werbung</h2>
+  <p>Ohne Premium kannst du einige Lektionen freischalten, indem du ein kurzes
+  Werbevideo ansiehst.</p>
+
+  <h2>9. Haftung</h2>
+  <p>Wir tun unser Bestes, damit die App funktioniert und die Inhalte korrekt
+  sind, aber der Dienst wird so bereitgestellt, wie er ist. Soweit gesetzlich
+  zulässig, haften wir nicht für indirekte Schäden aus der Nutzung der App oder
+  für Inhalte, die Nutzer veröffentlichen.</p>
+
+  <h2>10. Änderungen und Schließung des Kontos</h2>
+  <p>Wir können diese Bedingungen aktualisieren; wesentliche Änderungen teilen
+  wir in der App mit. Du kannst die App jederzeit nicht mehr nutzen und dein
+  Konto über das Profil löschen.</p>
+
+  <h2>11. Anwendbares Recht und Gerichtsstand</h2>
+  <p>Es gilt schweizerisches Recht. Gerichtsstand ist Zürich, Schweiz. Zwingende
+  Rechte, die dir das Recht deines Landes als Verbraucher gewährt, einschließlich
+  des Rechts, an deinem Wohnort zu klagen, bleiben vorbehalten.</p>
+</article>
+
+<article lang="fr">
+  <h1>Conditions d'utilisation</h1>
+  <p class="updated">Dernière mise à jour : 11 octobre 2026</p>
+
+  <h2>1. Le service</h2>
+  <p>CosmoTrainer est une application pour apprendre les langues avec des
+  vocabulaires, des exercices, des leçons et des classes. Elle est fournie par
+  Marco Suffi, Zurich, Suisse (contact :
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>).
+  En utilisant l'application, tu acceptes ces conditions et tu confirmes avoir
+  lu la <a href="privacy.html" data-keep-lang>politique de
+  confidentialité</a>.</p>
+
+  <h2>2. Qui peut l'utiliser</h2>
+  <p>Tu dois avoir au moins <strong>14 ans</strong>. Tu es responsable de ce qui
+  se passe avec ton compte : ne partage pas ton mot de passe.</p>
+
+  <h2>3. Les contenus que tu publies</h2>
+  <p>Ce que tu crées reste à toi. Si tu le rends public, tu permets aux autres
+  utilisateurs de le voir, de l'utiliser pour étudier, de l'enregistrer et de
+  l'ajouter à leurs leçons et classes, dans CosmoTrainer. Si tu supprimes ton
+  compte, les contenus publics restent disponibles de façon anonyme. Ne publie
+  que ce que tu as le droit de publier.</p>
+
+  <h2>4. Ce qui n'est pas autorisé</h2>
+  <p><strong>Nous ne tolérons ni contenus offensants ni utilisateurs
+  abusifs.</strong> Dans les contenus, les commentaires et les noms
+  d'utilisateur, sont interdits :</p>
+  <ul>
+    <li>les insultes, le harcèlement, les menaces, l'intimidation ;</li>
+    <li>la discrimination ou l'incitation à la haine ;</li>
+    <li>les contenus sexuels, violents ou autrement inadaptés à un public
+    d'adolescents ;</li>
+    <li>les activités illégales, le spam, la publicité non sollicitée ;</li>
+    <li>les données personnelles d'autres personnes ;</li>
+    <li>les contenus qui violent le droit d'auteur ou d'autres droits de
+    tiers.</li>
+  </ul>
+  <p>Chaque contenu et chaque commentaire peut être <strong>signalé</strong>
+  depuis son menu, et chaque utilisateur peut être <strong>bloqué</strong>. Nous
+  examinons les signalements <strong>dans un délai de 48 heures</strong> : nous
+  supprimons les contenus qui enfreignent ces règles et pouvons suspendre ou
+  fermer les comptes responsables.</p>
+
+  <h2>5. Classes</h2>
+  <p>Les enseignants peuvent créer des classes et attribuer des supports. Qui
+  rejoint une classe accepte que l'enseignant voie ses progrès sur ces supports,
+  comme décrit dans la politique de confidentialité. Les enseignants s'engagent
+  à n'utiliser ces informations que pour l'enseignement.</p>
+
+  <h2>6. Leçon magique</h2>
+  <p>Les leçons et vocabulaires magiques sont générés par un modèle
+  d'intelligence artificielle et peuvent contenir des erreurs : vérifie-les avant
+  de les utiliser pour enseigner. En tant qu'invité, tu peux en créer un ; pour
+  en créer d'autres, il faut un compte.</p>
+
+  <h2>7. Premium</h2>
+  <ul>
+    <li>Le Premium est un abonnement mensuel ou annuel, souscrit via Google Play
+    ou l'App Store, au prix affiché dans l'application avant l'achat.</li>
+    <li>Il se renouvelle automatiquement à l'échéance, sauf résiliation au moins
+    24 heures avant, dans les réglages d'abonnement de ton store.</li>
+    <li>Si un essai gratuit est proposé, tu ne paies rien en résiliant avant sa
+    fin.</li>
+    <li>Les paiements et remboursements suivent les règles du store où tu as
+    acheté. Supprimer ton compte ne résilie pas l'abonnement : il faut le
+    résilier dans le store.</li>
+  </ul>
+
+  <h2>8. Publicité</h2>
+  <p>Sans Premium, tu peux débloquer certaines leçons en regardant une courte
+  vidéo publicitaire.</p>
+
+  <h2>9. Responsabilité</h2>
+  <p>Nous faisons de notre mieux pour que l'application fonctionne et que les
+  contenus soient corrects, mais le service est fourni tel quel. Dans les limites
+  permises par la loi, nous ne répondons pas des dommages indirects liés à
+  l'utilisation de l'application ni des contenus publiés par les
+  utilisateurs.</p>
+
+  <h2>10. Modifications et fermeture du compte</h2>
+  <p>Nous pouvons mettre à jour ces conditions ; les changements importants
+  seront annoncés dans l'application. Tu peux cesser d'utiliser l'application et
+  supprimer ton compte à tout moment, depuis ton Profil.</p>
+
+  <h2>11. Droit applicable et for</h2>
+  <p>Le droit suisse s'applique. For juridique : Zurich, Suisse. Les droits
+  impératifs que la loi de ton pays te reconnaît en tant que consommateur, y
+  compris celui de saisir les tribunaux de ton lieu de résidence, demeurent
+  réservés.</p>
+</article>
+
+<article lang="es">
+  <h1>Condiciones de uso</h1>
+  <p class="updated">Última actualización: 11 de octubre de 2026</p>
+
+  <h2>1. El servicio</h2>
+  <p>CosmoTrainer es una app para aprender idiomas con vocabularios, ejercicios,
+  lecciones y clases. La ofrece Marco Suffi, Zúrich, Suiza (contacto:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>).
+  Al usar la app aceptas estas condiciones y confirmas haber leído la
+  <a href="privacy.html" data-keep-lang>política de privacidad</a>.</p>
+
+  <h2>2. Quién puede usarla</h2>
+  <p>Debes tener al menos <strong>14 años</strong>. Eres responsable de lo que
+  ocurre con tu cuenta: no compartas tu contraseña.</p>
+
+  <h2>3. Los contenidos que publicas</h2>
+  <p>Lo que creas sigue siendo tuyo. Si lo haces público, permites a los demás
+  usuarios verlo, usarlo para estudiar, guardarlo e incluirlo en sus lecciones y
+  clases, dentro de CosmoTrainer. Si eliminas tu cuenta, los contenidos públicos
+  siguen disponibles de forma anónima. Publica solo lo que tienes derecho a
+  publicar.</p>
+
+  <h2>4. Lo que no está permitido</h2>
+  <p><strong>No toleramos contenidos ofensivos ni usuarios abusivos.</strong> En
+  los contenidos, comentarios y nombres de usuario no se permiten:</p>
+  <ul>
+    <li>insultos, acoso, amenazas o intimidación;</li>
+    <li>discriminación o incitación al odio;</li>
+    <li>contenidos sexuales, violentos o de otro modo inapropiados para un
+    público adolescente;</li>
+    <li>actividades ilegales, spam o publicidad no solicitada;</li>
+    <li>datos personales de otras personas;</li>
+    <li>material que infrinja derechos de autor u otros derechos de
+    terceros.</li>
+  </ul>
+  <p>Cualquier contenido o comentario se puede <strong>denunciar</strong> desde
+  su menú, y cualquier usuario se puede <strong>bloquear</strong>. Revisamos las
+  denuncias <strong>en un plazo de 48 horas</strong>: eliminamos los contenidos
+  que incumplen estas normas y podemos suspender o cerrar las cuentas
+  responsables.</p>
+
+  <h2>5. Clases</h2>
+  <p>Los profesores pueden crear clases y asignar materiales. Quien se une a una
+  clase acepta que el profesor vea su progreso en esos materiales, como se
+  describe en la política de privacidad. Los profesores se comprometen a usar
+  esta información solo para la enseñanza.</p>
+
+  <h2>6. Lección mágica</h2>
+  <p>Las lecciones y los vocabularios mágicos los genera un modelo de
+  inteligencia artificial y pueden contener errores: revísalos antes de usarlos
+  para enseñar. Como invitado puedes crear uno; para crear más necesitas una
+  cuenta.</p>
+
+  <h2>7. Premium</h2>
+  <ul>
+    <li>Premium es una suscripción mensual o anual que se contrata a través de
+    Google Play o la App Store, al precio que se muestra en la app antes de la
+    compra.</li>
+    <li>Se renueva automáticamente al vencer, salvo que la canceles al menos 24
+    horas antes desde los ajustes de suscripciones de tu tienda.</li>
+    <li>Si se ofrece una prueba gratuita, no pagas nada si cancelas antes de que
+    termine.</li>
+    <li>Los pagos y reembolsos siguen las normas de la tienda en la que
+    compraste. Eliminar la cuenta no cancela la suscripción: debes cancelarla en
+    la tienda.</li>
+  </ul>
+
+  <h2>8. Publicidad</h2>
+  <p>Sin Premium, puedes desbloquear algunas lecciones viendo un breve vídeo
+  publicitario.</p>
+
+  <h2>9. Responsabilidad</h2>
+  <p>Hacemos todo lo posible para que la app funcione y los contenidos sean
+  correctos, pero el servicio se ofrece tal cual. En la medida permitida por la
+  ley, no respondemos de los daños indirectos derivados del uso de la app ni de
+  los contenidos publicados por los usuarios.</p>
+
+  <h2>10. Cambios y cierre de la cuenta</h2>
+  <p>Podemos actualizar estas condiciones; los cambios relevantes se comunicarán
+  en la app. Puedes dejar de usar la app y eliminar tu cuenta en cualquier
+  momento, desde tu Perfil.</p>
+
+  <h2>11. Ley aplicable y jurisdicción</h2>
+  <p>Se aplica el derecho suizo. Jurisdicción: Zúrich, Suiza. Quedan a salvo los
+  derechos irrenunciables que la ley de tu país te reconoce como consumidor,
+  incluido el de acudir a los tribunales del lugar donde vives.</p>
+</article>
 
 </main>
+
+<footer>
+  <nav>
+    <a href="privacy.html" data-keep-lang data-ui="privacy">Informativa sulla privacy</a>
+    <a href="account-deletion.html" data-keep-lang data-ui="deletion">Eliminazione account</a>
+  </nav>
+  © CosmoTrainer
+</footer>
+
+<script>
+  (function () {
+    var PAGE = 'terms';
+    var LANGS = [
+      { c: 'it', f: '🇮🇹', n: 'Italiano' },
+      { c: 'en', f: '🇬🇧', n: 'English' },
+      { c: 'de', f: '🇩🇪', n: 'Deutsch' },
+      { c: 'fr', f: '🇫🇷', n: 'Français' },
+      { c: 'es', f: '🇪🇸', n: 'Español' }
+    ];
+    var UI = {
+      it: { lang: 'Lingua', privacy: 'Informativa sulla privacy', terms: "Termini d'uso", deletion: 'Eliminazione account' },
+      en: { lang: 'Language', privacy: 'Privacy Policy', terms: 'Terms of Use', deletion: 'Account deletion' },
+      de: { lang: 'Sprache', privacy: 'Datenschutzerklärung', terms: 'Nutzungsbedingungen', deletion: 'Konto löschen' },
+      fr: { lang: 'Langue', privacy: 'Politique de confidentialité', terms: "Conditions d'utilisation", deletion: 'Suppression du compte' },
+      es: { lang: 'Idioma', privacy: 'Política de privacidad', terms: 'Condiciones de uso', deletion: 'Eliminación de la cuenta' }
+    };
+    var TICK = '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>';
+    var root = document.documentElement;
+    var btn = document.getElementById('langBtn');
+    var list = document.getElementById('langList');
+
+    function save(c) { try { localStorage.setItem('ct_lang', c); } catch (e) {} }
+
+    // la lingua scelta vale per tutto il sito: la ricordano il browser
+    // e i link verso le altre pagine
+    function apply(c, fromMenu) {
+      var d = UI[c];
+      root.setAttribute('data-lang', c);
+      root.lang = c;
+      document.title = 'CosmoTrainer – ' + d[PAGE];
+      btn.setAttribute('aria-label', d.lang);
+      document.getElementById('langCur').textContent =
+        LANGS.filter(function (l) { return l.c === c; })[0].n;
+      Array.prototype.forEach.call(list.children, function (li) {
+        li.setAttribute('aria-selected', String(li.getAttribute('data-c') === c));
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('[data-ui]'), function (el) {
+        el.textContent = d[el.getAttribute('data-ui')];
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('a[data-keep-lang]'), function (a) {
+        a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + c);
+      });
+      save(c);
+      if (fromMenu) {
+        try { history.replaceState(null, '', location.pathname + '?lang=' + c); } catch (e) {}
+      }
+    }
+
+    function openList() {
+      list.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      var sel = list.querySelector('[aria-selected="true"] button');
+      if (sel) sel.focus();
+    }
+    function closeList() {
+      list.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    LANGS.forEach(function (l) {
+      var li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.setAttribute('data-c', l.c);
+      li.innerHTML = '<button type="button"><span class="fl">' + l.f + '</span><span>' + l.n + '</span>' + TICK + '</button>';
+      li.firstChild.addEventListener('click', function () {
+        apply(l.c, true);
+        closeList();
+        btn.focus();
+      });
+      list.appendChild(li);
+    });
+    btn.addEventListener('click', function () { if (list.hidden) openList(); else closeList(); });
+    document.addEventListener('click', function (e) {
+      if (!document.getElementById('langMenu').contains(e.target)) closeList();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !list.hidden) { closeList(); btn.focus(); }
+    });
+    list.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      var b = Array.prototype.slice.call(list.querySelectorAll('button'));
+      var i = b.indexOf(document.activeElement);
+      b[(i + (e.key === 'ArrowDown' ? 1 : -1) + b.length) % b.length].focus();
+    });
+
+    apply(root.getAttribute('data-lang'), false);
+  })();
+</script>
 </body>
 </html>

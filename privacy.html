@@ -1,225 +1,938 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CosmoTrainer — Informativa privacy / Privacy Policy</title>
+<title>CosmoTrainer – Informativa sulla privacy</title>
+<meta name="description" content="Come CosmoTrainer tratta i dati personali di chi usa l'app.">
+<!-- fuori dai risultati dei motori di ricerca: la pagina resta pubblica
+     (la aprono l'app e gli store), ma non va cercata. Non va bloccata
+     anche in robots.txt, o il motore non leggerebbe questa riga -->
+<meta name="robots" content="noindex">
 <!--
-  BOZZA DA COMPLETARE E DA FAR VALIDARE.
-  Tutto ciò che è dentro <span class="todo">…</span> va sostituito con i
-  dati veri (e la classe "todo" tolta). Il testo descrive quello che l'app
-  fa oggi: se cambiano i dati raccolti o i fornitori, va aggiornato.
-  Per un'app usata anche da minori, una revisione legale è consigliata.
+  Da completare prima di pubblicare: le parti evidenziate in giallo
+  (<span class="todo">). Si carica nella radice del sito, accanto a
+  index.html: https://www.cosmo-trainer.com/privacy.html
+
+  La lingua è quella scelta sul sito: index.html la passa con ?lang= e la
+  salva nel browser (ct_lang); l'app la passa con ?lang=. Senza nessuna
+  delle due vale quella del browser, e altrimenti l'inglese.
 -->
+<script>
+  (function () {
+    var ok = { it: 1, en: 1, de: 1, fr: 1, es: 1 }, c = null;
+    try { c = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+    if (!ok[c]) { try { c = localStorage.getItem('ct_lang'); } catch (e) {} }
+    if (!ok[c]) c = (navigator.language || '').slice(0, 2).toLowerCase();
+    if (!ok[c]) c = 'en';
+    document.documentElement.setAttribute('data-lang', c);
+    document.documentElement.lang = c;
+  })();
+</script>
 <style>
-  :root { color-scheme: dark; }
-  body {
-    margin: 0; padding: 32px 20px;
-    background: #0B1022; color: #E3E5F5;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    line-height: 1.6;
+  :root {
+    --bg: #070a1c; --bg-2: #0e1333;
+    --card: rgba(255,255,255,.06); --border: rgba(255,255,255,.12);
+    --text: #eef0ff; --muted: #a9afd6;
+    --accent: #7c5cff; --accent-2: #2dd4ff;
   }
-  main { max-width: 760px; margin: 0 auto; }
-  h1 { color: #F2B33D; font-size: 1.6rem; margin-bottom: 4px; }
-  h2 { color: #B8A3FF; font-size: 1.1rem; margin-top: 32px; }
-  a { color: #8EB4FF; }
-  ul { padding-left: 20px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(124,92,255,.35), transparent 60%),
+      radial-gradient(700px 400px at 0% 20%, rgba(45,212,255,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg), var(--bg-2));
+    background-attachment: fixed;
+    color: var(--text); line-height: 1.65; min-height: 100vh;
+    overflow-wrap: break-word;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 22px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem;
+          color: var(--text); text-decoration: none; }
+  .logo-dot { width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 70%);
+    box-shadow: 0 0 18px rgba(124,92,255,.7); }
+
+  /* il menu delle lingue, lo stesso di index.html */
+  .lang-menu { position: relative; }
+  .lang-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text); font: inherit;
+    font-size: .92rem; font-weight: 600; cursor: pointer; }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"] { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.1); }
+  .lang-btn:focus-visible, .lang-list button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  .ico-tr { width: 20px; height: 20px; flex: none; }
+  .lang-btn .chev { width: 18px; height: 18px; color: var(--muted); transition: transform .15s; }
+  .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .lang-list { position: absolute; right: 0; top: calc(100% + 8px); min-width: 200px; list-style: none; padding: 6px;
+    border-radius: 14px; background: #141a45; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,.5); z-index: 50; }
+  .lang-list[hidden] { display: none; }
+  .lang-list button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0;
+    border-radius: 10px; background: transparent; color: var(--text); font: inherit; font-size: .95rem; text-align: left; cursor: pointer; }
+  .lang-list button:hover { background: rgba(255,255,255,.08); }
+  .lang-list li[aria-selected="true"] button { background: rgba(124,92,255,.22); font-weight: 700; }
+  .lang-list .fl { font-size: 1.15rem; }
+  .lang-list .tick { margin-left: auto; width: 18px; height: 18px; color: var(--accent-2); visibility: hidden; }
+  .lang-list li[aria-selected="true"] .tick { visibility: visible; }
+
+  /* una lingua alla volta; senza JavaScript si vedono tutte */
+  html[data-lang] article[lang] { display: none; }
+  html[data-lang="it"] article[lang="it"], html[data-lang="en"] article[lang="en"],
+  html[data-lang="de"] article[lang="de"], html[data-lang="fr"] article[lang="fr"],
+  html[data-lang="es"] article[lang="es"] { display: block; }
+
+  main { padding: 10px 0 60px; }
+  article { background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+            padding: 28px 24px; margin-bottom: 28px; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.2; margin-bottom: 6px; }
+  h2 { font-size: 1.1rem; color: var(--accent-2); margin: 28px 0 8px; }
+  p + p { margin-top: 10px; }
+  ul { padding-left: 20px; margin-top: 6px; }
   li { margin: 6px 0; }
-  .muted { color: #9095B8; font-size: 0.9rem; }
+  a { color: var(--accent-2); }
+  .updated { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .95rem; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--border);
+           overflow-wrap: anywhere; }
+  th { color: var(--muted); font-weight: 600; }
   .todo { background: #F2B33D; color: #0B1022; padding: 0 4px; border-radius: 4px; }
-  hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; }
+  footer { color: var(--muted); font-size: .85rem; text-align: center; padding: 0 0 40px; }
+  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-bottom: 8px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); text-decoration: underline; }
 </style>
 </head>
 <body>
-<main>
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html" data-keep-lang><span class="logo-dot"></span>CosmoTrainer</a>
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="langList">
+        <svg class="ico-tr" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+        <span id="langCur"></span>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <ul class="lang-list" id="langList" role="listbox" hidden></ul>
+    </div>
+  </div>
+</header>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Informativa sul trattamento dei dati personali ·
-  ultimo aggiornamento: <span class="todo">DATA</span></p>
+<main class="wrap">
 
-  <h2>Chi tratta i tuoi dati</h2>
-  <p>Il titolare del trattamento è <span class="todo">NOME E COGNOME / RAGIONE
-  SOCIALE</span>, <span class="todo">INDIRIZZO, PAESE</span>. Per qualsiasi
-  domanda sui tuoi dati scrivi a <span class="todo">EMAIL DI CONTATTO</span>.</p>
+<article lang="it">
+  <h1>Informativa sulla privacy</h1>
+  <p class="updated">Ultimo aggiornamento: 11 ottobre 2026</p>
 
-  <h2>Età minima</h2>
-  <p>CosmoTrainer è destinata a chi ha almeno <strong>14 anni</strong>. Al primo
-  avvio l'app chiede mese e anno di nascita: non li salva, e conserva solo la
-  data in cui hai dichiarato di avere l'età richiesta.</p>
+  <p>Questa informativa spiega quali dati personali tratta l'app CosmoTrainer
+  (per Android e iOS), perché lo fa e quali diritti hai. Si applicano la legge
+  federale svizzera sulla protezione dei dati (LPD) e, per chi usa l'app
+  dall'Unione europea o dallo Spazio economico europeo, il Regolamento generale
+  sulla protezione dei dati (GDPR).</p>
 
-  <h2>Quali dati raccogliamo e perché</h2>
+  <h2>1. Chi è responsabile</h2>
+  <p>Titolare del trattamento: Marco Suffi, Zurigo, Svizzera.<br>
+  Per qualsiasi domanda sui tuoi dati:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.</p>
+  <p>Rappresentante nell'Unione europea (art. 27 GDPR):
+  <span class="todo">NOME E INDIRIZZO DEL RAPPRESENTANTE</span>.</p>
+
+  <h2>2. Età minima</h2>
+  <p>CosmoTrainer è destinata a chi ha almeno <strong>14 anni</strong>. Al
+  primo avvio l'app chiede mese e anno di nascita: non li salva, e conserva solo
+  la data in cui hai dichiarato di avere l'età richiesta. Chi ha meno di 14 anni
+  non può usare l'app.</p>
+
+  <h2>3. Quali dati trattiamo e perché</h2>
   <ul>
-    <li><strong>Account</strong>: nome utente; email e password se ti registri
-    con l'email, oppure l'identità fornita da Google o Apple se accedi con
-    loro (con Apple puoi nascondere la tua email). Puoi anche usare l'app come
-    ospite, senza email. Servono a farti accedere e a conservare i tuoi
-    progressi.</li>
-    <li><strong>Profilo e studio</strong>: lingue che studi o insegni, livello,
+    <li><strong>Account.</strong> Nome utente; email e password (conservata in
+    una forma che nemmeno noi possiamo leggere) se ti registri con l'email,
+    oppure l'identità che ci trasmettono Google o Apple se accedi con loro (con
+    Apple puoi nascondere la tua email). Puoi anche usare l'app come ospite,
+    senza email. Servono a farti accedere e a conservare i tuoi progressi.</li>
+    <li><strong>Profilo e studio.</strong> Lingue che studi o insegni, livello,
     ruolo (studente o insegnante), vocabolari, esercizi e lezioni che crei,
-    risultati degli allenamenti, progressi sulle parole. Servono a far
-    funzionare l'app e a proporti i contenuti adatti.</li>
-    <li><strong>Contenuti pubblici, commenti e voti</strong>: quello che scegli
-    di pubblicare è visibile agli altri utenti insieme al tuo nome utente.
+    risultati degli allenamenti e progressi sulle parole. Servono a far
+    funzionare l'app e a proporti contenuti adatti a te.</li>
+    <li><strong>Contenuti pubblici, commenti e voti.</strong> Ciò che scegli di
+    pubblicare è visibile agli altri utenti insieme al tuo nome utente.
     Conserviamo anche le segnalazioni che invii e gli utenti che blocchi, per
     moderare i contenuti.</li>
-    <li><strong>Classi</strong>: se ti iscrivi alla classe di un insegnante,
+    <li><strong>Classi.</strong> Se ti iscrivi alla classe di un insegnante,
     l'insegnante vede il tuo nome utente e i tuoi progressi sui soli materiali
-    assegnati alla classe (completamenti e percentuali di risposte corrette,
-    non il testo delle risposte). Prima dell'iscrizione ti chiediamo il
-    consenso, e ne registriamo data e versione. Puoi uscire dalla classe
-    quando vuoi.</li>
-    <li><strong>Commenti inviati a noi</strong>: il messaggio, con ruolo e
-    lingue del profilo per capire il contesto.</li>
-    <li><strong>Abbonamento Premium</strong>: il pagamento lo gestiscono Google
-    Play o l'App Store; noi riceviamo solo l'identificativo dell'acquisto, il
+    assegnati alla classe: completamenti e percentuali di risposte corrette, non
+    il testo delle risposte. Prima dell'iscrizione ti chiediamo il consenso e ne
+    registriamo data e versione. Puoi uscire dalla classe quando vuoi.</li>
+    <li><strong>Messaggi che ci invii</strong> dall'app, con il ruolo e le lingue
+    del profilo, per capirne il contesto.</li>
+    <li><strong>Abbonamento Premium.</strong> Il pagamento lo gestiscono Google
+    Play o l'App Store: noi riceviamo solo l'identificativo dell'acquisto, il
     piano e la scadenza, per attivare il Premium. Non vediamo i dati della tua
     carta.</li>
-    <li><strong>Lezione magica</strong>: i testi e gli argomenti che scrivi per
-    generare una lezione vengono inviati, tramite il nostro server e senza il
-    tuo nome o la tua email, al fornitore del modello di intelligenza
-    artificiale (<span class="todo">xAI, Stati Uniti — verificare</span>), che
-    li elabora per produrre parole e domande.</li>
-    <li><strong>Pubblicità</strong>: chi non è Premium può sbloccare alcune
+    <li><strong>Lezione e vocabolario magico.</strong> I testi e gli argomenti
+    che scrivi per generarli vengono inviati, tramite il nostro server e senza il
+    tuo nome o la tua email, a xAI, il fornitore del modello di intelligenza
+    artificiale, che li elabora per produrre parole e domande.</li>
+    <li><strong>Lettura ad alta voce.</strong> Le parole e le frasi da leggere
+    vengono inviate, tramite il nostro server e senza dati del tuo account, al
+    servizio di sintesi vocale di Google Cloud. L'audio ottenuto resta sui nostri
+    server e viene riusato per chiunque chieda lo stesso testo. Senza rete
+    l'app usa la voce del telefono.</li>
+    <li><strong>Pubblicità.</strong> Chi non è Premium può sbloccare alcune
     lezioni guardando un video di Google AdMob. Gli annunci sono <em>non
-    personalizzati</em> e adatti a tutti; Google tratta comunque dati tecnici
-    del dispositivo (per esempio indirizzo IP e identificativi pubblicitari)
-    per mostrarli, limitarne la ripetizione e prevenire le frodi. Nello Spazio
-    economico europeo, nel Regno Unito e in Svizzera il consenso si chiede con
-    il modulo di Google prima del primo annuncio.</li>
-    <li><strong>Modalità vocale</strong>: il riconoscimento del parlato usa il
+    personalizzati</em> e adatti a tutte le età; Google tratta comunque dati
+    tecnici del dispositivo (per esempio indirizzo IP e identificativi
+    pubblicitari) per mostrarli, limitarne la ripetizione e prevenire le frodi.
+    In Svizzera, nello Spazio economico europeo e nel Regno Unito il consenso si
+    chiede con il modulo di Google prima del primo annuncio.</li>
+    <li><strong>Modalità vocale.</strong> Il riconoscimento del parlato usa il
     servizio del sistema operativo (Google su Android, Apple su iOS); all'app
     arriva solo il testo riconosciuto.</li>
-    <li><strong>Sul dispositivo</strong>: una copia dei tuoi dati per l'uso
-    offline, le preferenze e il promemoria giornaliero (una notifica locale,
-    che non passa da nessun server).</li>
+    <li><strong>Sul tuo dispositivo.</strong> Una copia dei tuoi dati per l'uso
+    senza rete, le preferenze e il promemoria giornaliero, che è una notifica
+    locale e non passa da nessun server.</li>
   </ul>
-  <p>Non usiamo strumenti di analisi o di profilazione, e non vendiamo dati.</p>
+  <p>Non usiamo strumenti di analisi o di profilazione, e non vendiamo dati a
+  nessuno.</p>
 
-  <h2>Basi giuridiche</h2>
+  <h2>4. Basi giuridiche</h2>
+  <p>Per chi è soggetto al GDPR trattiamo i dati: per fornirti il servizio che
+  chiedi (art. 6 par. 1 lett. b: account, studio, classi, abbonamento); con il
+  tuo consenso (lett. a: iscrizione a una classe e, dove richiesto, pubblicità),
+  che puoi revocare in ogni momento; per il nostro legittimo interesse alla
+  sicurezza del servizio e alla moderazione dei contenuti (lett. f).</p>
+
+  <h2>5. A chi arrivano i dati</h2>
+  <table>
+    <tr><th>Fornitore</th><th>Per che cosa</th><th>Dove</th></tr>
+    <tr><td>Supabase</td><td>database, accesso, server dell'app</td>
+        <td>Unione europea (Stoccolma, Svezia)</td></tr>
+    <tr><td>Google</td><td>accesso con Google, Google Play, AdMob, sintesi
+        vocale</td><td>Unione europea e Stati Uniti</td></tr>
+    <tr><td>Apple</td><td>accesso con Apple, App Store</td>
+        <td>Unione europea e Stati Uniti</td></tr>
+    <tr><td>xAI</td><td>lezione e vocabolario magico</td>
+        <td>Stati Uniti</td></tr>
+  </table>
+  <p>Inoltre: gli altri utenti vedono ciò che pubblichi; l'insegnante di una
+  classe a cui sei iscritto vede i progressi descritti sopra. Comunichiamo dati
+  alle autorità solo se la legge ce lo impone.</p>
+
+  <h2>6. Trasferimenti all'estero</h2>
+  <p>Il database si trova nell'Unione europea, che la Svizzera riconosce come
+  dotata di una protezione adeguata. Per i trasferimenti negli Stati Uniti ci
+  basiamo sulla certificazione dei fornitori al Data Privacy Framework UE-USA e
+  Svizzera-USA, dove presente, e altrimenti sulle clausole contrattuali standard
+  previste dai loro contratti.</p>
+
+  <h2>7. Per quanto tempo</h2>
   <ul>
-    <li>l'esecuzione del servizio che chiedi (account, studio, classi,
-    abbonamento);</li>
-    <li>il consenso, per l'iscrizione a una classe e, dove richiesto, per la
-    pubblicità;</li>
-    <li>il legittimo interesse alla sicurezza del servizio e alla moderazione
-    dei contenuti.</li>
+    <li>I dati dell'account restano finché l'account esiste. Se lo elimini
+    (Profilo → Elimina account), dopo 30 giorni di attesa, durante i quali puoi
+    ripensarci, vengono cancellati. I contenuti che avevi reso pubblici restano
+    disponibili, ma anonimi. Dettagli nella
+    <a href="account-deletion.html" data-keep-lang>pagina sull'eliminazione
+    dell'account</a>.</li>
+    <li>Gli account ospite senza accessi da 60 giorni vengono cancellati con i
+    loro dati.</li>
+    <li>I testi inviati per la lezione magica restano sul server circa un
+    giorno, il tempo di consegnarti il risultato anche se la connessione cade.</li>
+    <li>Segnalazioni e messaggi che ci invii restano finché servono a gestirli,
+    e se ne vanno comunque con il tuo account.</li>
   </ul>
 
-  <h2>Chi altro tratta i dati</h2>
-  <ul>
-    <li><strong>Supabase</strong> (database, accesso e server), regione
-    <span class="todo">REGIONE DEL PROGETTO SUPABASE</span>;</li>
-    <li><strong>Google</strong> (accesso con Google, Google Play, AdMob);</li>
-    <li><strong>Apple</strong> (accesso con Apple, App Store);</li>
-    <li><strong><span class="todo">xAI</span></strong> (lezione magica).</li>
-  </ul>
-  <p>Alcuni di questi fornitori si trovano fuori dall'Unione europea e dalla
-  Svizzera; i trasferimenti avvengono sulla base di
-  <span class="todo">CLAUSOLE CONTRATTUALI STANDARD / DECISIONI DI
-  ADEGUATEZZA — verificare per ciascun fornitore</span>.</p>
+  <h2>8. I tuoi diritti</h2>
+  <p>Puoi chiederci di accedere ai tuoi dati, correggerli, cancellarli,
+  riceverli in un formato leggibile da una macchina, limitarne il trattamento o
+  opporti, e revocare un consenso già dato, scrivendo a
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.
+  Rispondiamo entro 30 giorni. Puoi anche rivolgerti all'Incaricato federale
+  della protezione dei dati e della trasparenza
+  (<a href="https://www.edoeb.admin.ch">www.edoeb.admin.ch</a>) o, se vivi
+  nell'Unione europea, all'autorità di controllo del tuo paese.</p>
 
-  <h2>Per quanto tempo</h2>
-  <ul>
-    <li>finché l'account esiste. Se lo elimini (Profilo → Elimina account), dopo
-    30 giorni di attesa i dati vengono cancellati; i contenuti che avevi reso
-    pubblici restano, ma anonimi;</li>
-    <li>gli account ospite non usati da <span class="todo">60</span> giorni
-    vengono cancellati con i loro dati;</li>
-    <li>i testi della lezione magica restano sul server solo il tempo necessario
-    a consegnarti il risultato.</li>
-  </ul>
-  <p>Dettagli sull'eliminazione: <a href="account-deletion.html">pagina
-  dedicata</a>.</p>
+  <h2>9. Sicurezza</h2>
+  <p>I dati viaggiano cifrati (HTTPS). Sul server ogni utente può leggere e
+  modificare solo ciò che gli spetta, e le chiavi dei fornitori restano sul
+  server, mai nell'app.</p>
 
-  <h2>I tuoi diritti</h2>
-  <p>Puoi chiedere di accedere ai tuoi dati, correggerli, cancellarli,
-  riceverli in un formato portabile, limitarne il trattamento o opporti, e
-  revocare un consenso già dato. Scrivi a <span class="todo">EMAIL DI
-  CONTATTO</span>. Puoi anche presentare reclamo all'autorità di controllo
-  (in Italia il Garante per la protezione dei dati personali; in Svizzera
-  l'Incaricato federale della protezione dei dati e della trasparenza).</p>
+  <h2>10. Modifiche</h2>
+  <p>Se questa informativa cambia in modo rilevante te lo diremo nell'app. La
+  data in cima indica l'ultima versione.</p>
+</article>
 
-  <h2>Modifiche</h2>
-  <p>Se questa informativa cambia in modo rilevante, te lo diremo nell'app.</p>
+<article lang="en">
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: October 11, 2026</p>
 
-  <hr>
+  <p>This policy explains what personal data the CosmoTrainer app (Android and
+  iOS) processes, why, and what your rights are. The Swiss Federal Act on Data
+  Protection (FADP) applies and, for users in the European Union or European
+  Economic Area, the General Data Protection Regulation (GDPR).</p>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Privacy Policy · last updated:
-  <span class="todo">DATE</span></p>
+  <h2>1. Who is responsible</h2>
+  <p>Data controller: Marco Suffi, Zurich, Switzerland.<br>
+  For any question about your data:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.</p>
+  <p>Representative in the European Union (Art. 27 GDPR):
+  <span class="todo">REPRESENTATIVE'S NAME AND ADDRESS</span>.</p>
 
-  <h2>Who processes your data</h2>
-  <p>The data controller is <span class="todo">NAME / COMPANY</span>,
-  <span class="todo">ADDRESS, COUNTRY</span>. Contact:
-  <span class="todo">CONTACT EMAIL</span>.</p>
-
-  <h2>Minimum age</h2>
+  <h2>2. Minimum age</h2>
   <p>CosmoTrainer is intended for people aged <strong>14 or older</strong>. On
-  first launch the app asks for your month and year of birth: it does not
-  store them, it only keeps the date on which you confirmed your age.</p>
+  first launch the app asks for your month and year of birth: it does not store
+  them, it only keeps the date on which you confirmed your age. People under 14
+  cannot use the app.</p>
 
-  <h2>What we collect and why</h2>
+  <h2>3. What we process and why</h2>
   <ul>
-    <li><strong>Account</strong>: username; email and password if you sign up
-    with email, or the identity provided by Google or Apple (Apple lets you hide
-    your email). You can also use the app as a guest, without an email.</li>
-    <li><strong>Profile and study data</strong>: languages, level, role
-    (student or teacher), the vocabularies, exercises and lessons you create,
-    training results and word progress.</li>
-    <li><strong>Public content, comments and ratings</strong>: what you publish
-    is visible to other users with your username. We also keep the reports you
-    send and the users you block, to moderate content.</li>
-    <li><strong>Classes</strong>: if you join a teacher's class, the teacher
-    sees your username and your progress on the class materials only
-    (completion and percentage of correct answers, not what you wrote). We ask
-    for your consent before you join and record its date and version. You can
-    leave at any time.</li>
-    <li><strong>Feedback you send us</strong>: the message, with your profile's
+    <li><strong>Account.</strong> Username; email and password (stored in
+    hashed form) if you sign up with email, or the identity provided by Google
+    or Apple if you sign in with them (Apple lets you hide your email). You can
+    also use the app as a guest, without an email.</li>
+    <li><strong>Profile and study data.</strong> Languages you study or teach,
+    level, role (student or teacher), the vocabularies, exercises and lessons
+    you create, training results and word progress.</li>
+    <li><strong>Public content, comments and ratings.</strong> What you publish
+    is visible to other users together with your username. We also keep the
+    reports you send and the users you block, to moderate content.</li>
+    <li><strong>Classes.</strong> If you join a teacher's class, the teacher sees
+    your username and your progress on the class materials only (completion and
+    percentage of correct answers, not what you wrote). We ask for your consent
+    before you join and record its date and version. You can leave at any
+    time.</li>
+    <li><strong>Messages you send us</strong> from the app, with your profile's
     role and languages for context.</li>
-    <li><strong>Premium subscription</strong>: payments are handled by Google
-    Play or the App Store; we only receive the purchase identifier, the plan
-    and the expiry date. We never see your card details.</li>
-    <li><strong>Magic lesson</strong>: the texts and topics you enter are sent,
-    through our server and without your name or email, to the AI model
-    provider (<span class="todo">xAI, United States — verify</span>).</li>
-    <li><strong>Ads</strong>: non-Premium users can unlock some lessons by
+    <li><strong>Premium subscription.</strong> Payments are handled by Google
+    Play or the App Store; we only receive the purchase identifier, the plan and
+    the expiry date. We never see your card details.</li>
+    <li><strong>Magic lesson and vocabulary.</strong> The texts and topics you
+    enter are sent, through our server and without your name or email, to xAI,
+    the AI model provider.</li>
+    <li><strong>Reading aloud.</strong> Words and sentences to be read are sent,
+    through our server and without any account data, to Google Cloud's
+    text-to-speech service. The resulting audio is kept on our servers and
+    reused for anyone requesting the same text. Offline, the app uses the
+    phone's own voice.</li>
+    <li><strong>Ads.</strong> Non-Premium users can unlock some lessons by
     watching a Google AdMob video. Ads are <em>non-personalised</em> and
-    suitable for all ages; Google still processes technical device data (such
-    as IP address and advertising identifiers) to serve ads, cap their
-    frequency and prevent fraud. In the EEA, the UK and Switzerland consent is
-    requested through Google's form before the first ad.</li>
-    <li><strong>Voice mode</strong>: speech recognition is performed by the
+    suitable for all ages; Google still processes technical device data (such as
+    IP address and advertising identifiers) to serve ads, cap their frequency and
+    prevent fraud. In Switzerland, the EEA and the UK, consent is requested
+    through Google's form before the first ad.</li>
+    <li><strong>Voice mode.</strong> Speech recognition is performed by the
     operating system's service (Google on Android, Apple on iOS); the app only
     receives the recognised text.</li>
-    <li><strong>On your device</strong>: a copy of your data for offline use,
-    your preferences and the daily reminder (a local notification).</li>
+    <li><strong>On your device.</strong> A copy of your data for offline use,
+    your preferences and the daily reminder, a local notification that never
+    goes through a server.</li>
   </ul>
-  <p>We use no analytics or profiling tools, and we do not sell data.</p>
+  <p>We use no analytics or profiling tools, and we never sell data.</p>
 
-  <h2>Legal bases</h2>
-  <p>Performance of the service you request; consent (joining a class, and ads
-  where required); legitimate interest in security and content moderation.</p>
+  <h2>4. Legal bases</h2>
+  <p>Where the GDPR applies we process data to provide the service you request
+  (Art. 6(1)(b): account, study, classes, subscription); with your consent
+  (Art. 6(1)(a): joining a class and, where required, ads), which you can
+  withdraw at any time; and for our legitimate interest in service security and
+  content moderation (Art. 6(1)(f)).</p>
 
-  <h2>Processors</h2>
-  <p>Supabase (region <span class="todo">SUPABASE REGION</span>), Google, Apple,
-  <span class="todo">xAI</span>. Some are located outside the EU and
-  Switzerland; transfers rely on <span class="todo">STANDARD CONTRACTUAL
-  CLAUSES / ADEQUACY DECISIONS — verify for each provider</span>.</p>
+  <h2>5. Recipients</h2>
+  <table>
+    <tr><th>Provider</th><th>Purpose</th><th>Location</th></tr>
+    <tr><td>Supabase</td><td>database, sign-in, app server</td>
+        <td>European Union (Stockholm, Sweden)</td></tr>
+    <tr><td>Google</td><td>Google sign-in, Google Play, AdMob, text-to-speech</td>
+        <td>European Union and United States</td></tr>
+    <tr><td>Apple</td><td>Apple sign-in, App Store</td>
+        <td>European Union and United States</td></tr>
+    <tr><td>xAI</td><td>magic lesson and vocabulary</td><td>United States</td></tr>
+  </table>
+  <p>In addition, other users see what you publish, and the teacher of a class
+  you joined sees the progress described above. We disclose data to authorities
+  only when required by law.</p>
 
-  <h2>Retention</h2>
-  <p>As long as your account exists. If you delete it (Profile → Delete
-  account), your data is erased after a 30-day waiting period; content you made
-  public stays available but anonymised. Guest accounts unused for
-  <span class="todo">60</span> days are deleted with their data. Magic lesson
-  texts are kept only as long as needed to deliver the result. See the
-  <a href="account-deletion.html">account deletion page</a>.</p>
+  <h2>6. International transfers</h2>
+  <p>The database is located in the European Union, which Switzerland
+  recognises as providing adequate protection. For transfers to the United
+  States we rely on the providers' certification under the EU-US and Swiss-US
+  Data Privacy Framework where available, and otherwise on the standard
+  contractual clauses included in their agreements.</p>
 
-  <h2>Your rights</h2>
-  <p>You can ask to access, correct, delete or port your data, restrict or
-  object to its processing, and withdraw consent, by writing to
-  <span class="todo">CONTACT EMAIL</span>. You can also lodge a complaint with
-  your data protection authority.</p>
+  <h2>7. Retention</h2>
+  <ul>
+    <li>Account data is kept as long as the account exists. If you delete it
+    (Profile → Delete account), it is erased after a 30-day waiting period in
+    which you can change your mind. Content you made public stays available, but
+    anonymised. See the <a href="account-deletion.html" data-keep-lang>account
+    deletion page</a>.</li>
+    <li>Guest accounts with no sign-in for 60 days are deleted with their
+    data.</li>
+    <li>Texts sent for the magic lesson stay on the server for about one day,
+    so the result can still be delivered if the connection drops.</li>
+    <li>Reports and messages you send us are kept as long as needed to handle
+    them, and are deleted with your account in any case.</li>
+  </ul>
+
+  <h2>8. Your rights</h2>
+  <p>You can ask to access, correct or delete your data, to receive it in a
+  machine-readable format, to restrict or object to its processing, and to
+  withdraw consent, by writing to
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.
+  We reply within 30 days. You can also contact the Swiss Federal Data
+  Protection and Information Commissioner
+  (<a href="https://www.edoeb.admin.ch">www.edoeb.admin.ch</a>) or, if you live
+  in the European Union, your local supervisory authority.</p>
+
+  <h2>9. Security</h2>
+  <p>Data travels encrypted (HTTPS). On the server each user can only read and
+  change what belongs to them, and provider keys stay on the server, never in
+  the app.</p>
+
+  <h2>10. Changes</h2>
+  <p>If this policy changes significantly we will tell you in the app. The date
+  at the top shows the latest version.</p>
+</article>
+
+<article lang="de">
+  <h1>Datenschutzerklärung</h1>
+  <p class="updated">Zuletzt aktualisiert: 11. Oktober 2026</p>
+
+  <p>Diese Erklärung zeigt, welche Personendaten die App CosmoTrainer (für
+  Android und iOS) bearbeitet, warum sie das tut und welche Rechte du hast. Es
+  gelten das Schweizer Bundesgesetz über den Datenschutz (DSG) und, für alle,
+  die die App aus der Europäischen Union oder dem Europäischen Wirtschaftsraum
+  nutzen, die Datenschutz-Grundverordnung (DSGVO).</p>
+
+  <h2>1. Wer verantwortlich ist</h2>
+  <p>Verantwortlicher: Marco Suffi, Zürich, Schweiz.<br>
+  Für alle Fragen zu deinen Daten:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.</p>
+  <p>Vertreter in der Europäischen Union (Art. 27 DSGVO):
+  <span class="todo">NAME UND ADRESSE DES VERTRETERS</span>.</p>
+
+  <h2>2. Mindestalter</h2>
+  <p>CosmoTrainer richtet sich an Personen ab <strong>14 Jahren</strong>. Beim
+  ersten Start fragt die App nach Monat und Jahr deiner Geburt: Sie speichert sie
+  nicht, sondern nur das Datum, an dem du bestätigt hast, alt genug zu sein. Wer
+  jünger als 14 ist, kann die App nicht nutzen.</p>
+
+  <h2>3. Welche Daten wir bearbeiten und warum</h2>
+  <ul>
+    <li><strong>Konto.</strong> Benutzername; E-Mail und Passwort (so
+    gespeichert, dass nicht einmal wir es lesen können), wenn du dich mit E-Mail
+    registrierst, oder die Identität, die uns Google oder Apple übermitteln, wenn
+    du dich mit ihnen anmeldest (bei Apple kannst du deine E-Mail verbergen). Du
+    kannst die App auch als Gast ohne E-Mail nutzen. Diese Daten dienen dazu,
+    dich anzumelden und deine Fortschritte zu speichern.</li>
+    <li><strong>Profil und Lernen.</strong> Sprachen, die du lernst oder
+    unterrichtest, Niveau, Rolle (Lernende oder Lehrperson), die Wortschätze,
+    Übungen und Lektionen, die du erstellst, Trainingsergebnisse und Fortschritte
+    bei den Wörtern. Sie dienen dazu, die App zu betreiben und dir passende
+    Inhalte vorzuschlagen.</li>
+    <li><strong>Öffentliche Inhalte, Kommentare und Bewertungen.</strong> Was du
+    veröffentlichst, sehen andere Nutzer zusammen mit deinem Benutzernamen. Wir
+    speichern auch die Meldungen, die du sendest, und die Nutzer, die du
+    blockierst, um Inhalte zu moderieren.</li>
+    <li><strong>Klassen.</strong> Wenn du der Klasse einer Lehrperson beitrittst,
+    sieht die Lehrperson deinen Benutzernamen und deine Fortschritte nur bei den
+    Materialien der Klasse: erledigte Übungen und Anteil richtiger Antworten,
+    nicht den Text deiner Antworten. Vor dem Beitritt bitten wir um deine
+    Einwilligung und speichern Datum und Version. Du kannst die Klasse jederzeit
+    verlassen.</li>
+    <li><strong>Nachrichten, die du uns sendest</strong>, aus der App, mit Rolle
+    und Sprachen des Profils, um den Zusammenhang zu verstehen.</li>
+    <li><strong>Premium-Abo.</strong> Die Zahlung wickeln Google Play oder der
+    App Store ab; wir erhalten nur die Kennung des Kaufs, den Tarif und das
+    Ablaufdatum, um Premium zu aktivieren. Deine Kartendaten sehen wir nie.</li>
+    <li><strong>Magische Lektion und magischer Wortschatz.</strong> Die Texte und
+    Themen, die du dafür eingibst, werden über unseren Server und ohne deinen
+    Namen oder deine E-Mail an xAI gesendet, den Anbieter des KI-Modells, der
+    daraus Wörter und Fragen erstellt.</li>
+    <li><strong>Vorlesen.</strong> Wörter und Sätze, die vorgelesen werden,
+    gehen über unseren Server und ohne Daten deines Kontos an den
+    Sprachsynthese-Dienst von Google Cloud. Das erzeugte Audio bleibt auf unseren
+    Servern und wird für alle wiederverwendet, die denselben Text anfordern. Ohne
+    Internet nutzt die App die Stimme des Telefons.</li>
+    <li><strong>Werbung.</strong> Ohne Premium kannst du einige Lektionen
+    freischalten, indem du ein Video von Google AdMob ansiehst. Die Anzeigen sind
+    <em>nicht personalisiert</em> und für alle Altersstufen geeignet; Google
+    bearbeitet dennoch technische Gerätedaten (zum Beispiel IP-Adresse und
+    Werbe-IDs), um sie anzuzeigen, ihre Wiederholung zu begrenzen und Betrug zu
+    verhindern. In der Schweiz, im EWR und im Vereinigten Königreich wird vor der
+    ersten Anzeige mit dem Formular von Google um Einwilligung gebeten.</li>
+    <li><strong>Sprachmodus.</strong> Die Spracherkennung nutzt den Dienst des
+    Betriebssystems (Google bei Android, Apple bei iOS); die App erhält nur den
+    erkannten Text.</li>
+    <li><strong>Auf deinem Gerät.</strong> Eine Kopie deiner Daten für die
+    Nutzung ohne Internet, deine Einstellungen und die tägliche Erinnerung, eine
+    lokale Mitteilung, die über keinen Server läuft.</li>
+  </ul>
+  <p>Wir verwenden keine Analyse- oder Profiling-Werkzeuge und verkaufen keine
+  Daten.</p>
+
+  <h2>4. Rechtsgrundlagen</h2>
+  <p>Soweit die DSGVO gilt, bearbeiten wir Daten: um dir den gewünschten Dienst
+  zu erbringen (Art. 6 Abs. 1 lit. b: Konto, Lernen, Klassen, Abo); mit deiner
+  Einwilligung (lit. a: Klassenbeitritt und, wo erforderlich, Werbung), die du
+  jederzeit widerrufen kannst; aufgrund unseres berechtigten Interesses an der
+  Sicherheit des Dienstes und der Moderation von Inhalten (lit. f).</p>
+
+  <h2>5. Empfänger</h2>
+  <table>
+    <tr><th>Anbieter</th><th>Wofür</th><th>Wo</th></tr>
+    <tr><td>Supabase</td><td>Datenbank, Anmeldung, Server der App</td>
+        <td>Europäische Union (Stockholm, Schweden)</td></tr>
+    <tr><td>Google</td><td>Anmeldung mit Google, Google Play, AdMob,
+        Sprachsynthese</td><td>Europäische Union und USA</td></tr>
+    <tr><td>Apple</td><td>Anmeldung mit Apple, App Store</td>
+        <td>Europäische Union und USA</td></tr>
+    <tr><td>xAI</td><td>magische Lektion und magischer Wortschatz</td>
+        <td>USA</td></tr>
+  </table>
+  <p>Ausserdem sehen andere Nutzer, was du veröffentlichst, und die Lehrperson
+  einer Klasse, der du beigetreten bist, sieht die oben beschriebenen
+  Fortschritte. Behörden geben wir Daten nur weiter, wenn das Gesetz es
+  verlangt.</p>
+
+  <h2>6. Bekanntgabe ins Ausland</h2>
+  <p>Die Datenbank befindet sich in der Europäischen Union, deren Datenschutz
+  die Schweiz als angemessen anerkennt. Für Übermittlungen in die USA stützen wir
+  uns auf die Zertifizierung der Anbieter nach dem Data Privacy Framework EU-USA
+  und Schweiz-USA, wo vorhanden, und sonst auf die Standardvertragsklauseln in
+  ihren Verträgen.</p>
+
+  <h2>7. Aufbewahrung</h2>
+  <ul>
+    <li>Kontodaten bleiben gespeichert, solange das Konto besteht. Wenn du es
+    löschst (Profil → Konto löschen), werden sie nach einer Wartezeit von 30
+    Tagen gelöscht, in der du es dir anders überlegen kannst. Inhalte, die du
+    veröffentlicht hattest, bleiben verfügbar, aber anonym. Details auf der
+    <a href="account-deletion.html" data-keep-lang>Seite zur
+    Kontolöschung</a>.</li>
+    <li>Gastkonten ohne Anmeldung seit 60 Tagen werden mit ihren Daten
+    gelöscht.</li>
+    <li>Texte für die magische Lektion bleiben etwa einen Tag auf dem Server,
+    damit das Ergebnis auch nach einem Verbindungsabbruch ankommt.</li>
+    <li>Meldungen und Nachrichten an uns bleiben gespeichert, solange wir sie zur
+    Bearbeitung brauchen, und werden in jedem Fall mit deinem Konto
+    gelöscht.</li>
+  </ul>
+
+  <h2>8. Deine Rechte</h2>
+  <p>Du kannst verlangen, deine Daten einzusehen, zu berichtigen, zu löschen,
+  in einem maschinenlesbaren Format zu erhalten, ihre Bearbeitung einzuschränken
+  oder ihr zu widersprechen, und eine erteilte Einwilligung widerrufen. Schreib
+  dazu an
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.
+  Wir antworten innerhalb von 30 Tagen. Du kannst dich auch an den
+  Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten
+  (<a href="https://www.edoeb.admin.ch">www.edoeb.admin.ch</a>) wenden oder,
+  wenn du in der Europäischen Union lebst, an die Aufsichtsbehörde deines
+  Landes.</p>
+
+  <h2>9. Sicherheit</h2>
+  <p>Die Daten werden verschlüsselt übertragen (HTTPS). Auf dem Server kann
+  jeder Nutzer nur lesen und ändern, was ihm gehört, und die Schlüssel der
+  Anbieter bleiben auf dem Server, nie in der App.</p>
+
+  <h2>10. Änderungen</h2>
+  <p>Wenn sich diese Erklärung wesentlich ändert, sagen wir es dir in der App.
+  Das Datum oben zeigt die neueste Version.</p>
+</article>
+
+<article lang="fr">
+  <h1>Politique de confidentialité</h1>
+  <p class="updated">Dernière mise à jour : 11 octobre 2026</p>
+
+  <p>Cette politique explique quelles données personnelles l'application
+  CosmoTrainer (pour Android et iOS) traite, pourquoi, et quels sont tes droits.
+  S'appliquent la loi fédérale suisse sur la protection des données (LPD) et,
+  pour les personnes qui utilisent l'application depuis l'Union européenne ou
+  l'Espace économique européen, le Règlement général sur la protection des
+  données (RGPD).</p>
+
+  <h2>1. Qui est responsable</h2>
+  <p>Responsable du traitement : Marco Suffi, Zurich, Suisse.<br>
+  Pour toute question sur tes données :
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.</p>
+  <p>Représentant dans l'Union européenne (art. 27 RGPD) :
+  <span class="todo">NOM ET ADRESSE DU REPRÉSENTANT</span>.</p>
+
+  <h2>2. Âge minimum</h2>
+  <p>CosmoTrainer s'adresse aux personnes d'au moins <strong>14 ans</strong>.
+  Au premier lancement, l'application demande le mois et l'année de naissance :
+  elle ne les enregistre pas et conserve seulement la date à laquelle tu as
+  déclaré avoir l'âge requis. Les personnes de moins de 14 ans ne peuvent pas
+  utiliser l'application.</p>
+
+  <h2>3. Quelles données nous traitons et pourquoi</h2>
+  <ul>
+    <li><strong>Compte.</strong> Nom d'utilisateur ; e-mail et mot de passe
+    (conservé sous une forme que même nous ne pouvons pas lire) si tu t'inscris
+    par e-mail, ou l'identité que nous transmettent Google ou Apple si tu te
+    connectes avec eux (avec Apple, tu peux masquer ton e-mail). Tu peux aussi
+    utiliser l'application en tant qu'invité, sans e-mail. Elles servent à te
+    connecter et à conserver tes progrès.</li>
+    <li><strong>Profil et apprentissage.</strong> Langues que tu étudies ou
+    enseignes, niveau, rôle (élève ou enseignant), vocabulaires, exercices et
+    leçons que tu crées, résultats des entraînements et progrès sur les mots.
+    Elles servent à faire fonctionner l'application et à te proposer des
+    contenus adaptés.</li>
+    <li><strong>Contenus publics, commentaires et notes.</strong> Ce que tu
+    choisis de publier est visible par les autres utilisateurs avec ton nom
+    d'utilisateur. Nous conservons aussi les signalements que tu envoies et les
+    utilisateurs que tu bloques, pour modérer les contenus.</li>
+    <li><strong>Classes.</strong> Si tu rejoins la classe d'un enseignant,
+    celui-ci voit ton nom d'utilisateur et tes progrès uniquement sur les
+    supports attribués à la classe : exercices terminés et pourcentage de bonnes
+    réponses, pas le texte de tes réponses. Avant l'inscription, nous te
+    demandons ton consentement et en enregistrons la date et la version. Tu peux
+    quitter la classe quand tu veux.</li>
+    <li><strong>Messages que tu nous envoies</strong> depuis l'application, avec
+    le rôle et les langues du profil, pour en comprendre le contexte.</li>
+    <li><strong>Abonnement Premium.</strong> Le paiement est géré par Google Play
+    ou l'App Store : nous recevons seulement l'identifiant de l'achat, la formule
+    et la date d'expiration, pour activer le Premium. Nous ne voyons jamais les
+    données de ta carte.</li>
+    <li><strong>Leçon et vocabulaire magiques.</strong> Les textes et les sujets
+    que tu saisis pour les créer sont envoyés, via notre serveur et sans ton nom
+    ni ton e-mail, à xAI, le fournisseur du modèle d'intelligence artificielle,
+    qui les traite pour produire des mots et des questions.</li>
+    <li><strong>Lecture à voix haute.</strong> Les mots et les phrases à lire
+    sont envoyés, via notre serveur et sans données de ton compte, au service de
+    synthèse vocale de Google Cloud. L'audio obtenu reste sur nos serveurs et est
+    réutilisé pour toute personne qui demande le même texte. Sans connexion,
+    l'application utilise la voix du téléphone.</li>
+    <li><strong>Publicité.</strong> Sans Premium, tu peux débloquer certaines
+    leçons en regardant une vidéo Google AdMob. Les annonces sont <em>non
+    personnalisées</em> et adaptées à tous les âges ; Google traite néanmoins des
+    données techniques de l'appareil (par exemple l'adresse IP et les
+    identifiants publicitaires) pour les afficher, en limiter la répétition et
+    prévenir la fraude. En Suisse, dans l'EEE et au Royaume-Uni, le consentement
+    est demandé avec le formulaire de Google avant la première annonce.</li>
+    <li><strong>Mode vocal.</strong> La reconnaissance vocale utilise le service
+    du système d'exploitation (Google sur Android, Apple sur iOS) ; l'application
+    ne reçoit que le texte reconnu.</li>
+    <li><strong>Sur ton appareil.</strong> Une copie de tes données pour
+    l'utilisation hors connexion, tes préférences et le rappel quotidien, une
+    notification locale qui ne passe par aucun serveur.</li>
+  </ul>
+  <p>Nous n'utilisons aucun outil d'analyse ni de profilage, et nous ne vendons
+  aucune donnée.</p>
+
+  <h2>4. Bases juridiques</h2>
+  <p>Lorsque le RGPD s'applique, nous traitons les données : pour te fournir le
+  service que tu demandes (art. 6, par. 1, let. b : compte, apprentissage,
+  classes, abonnement) ; avec ton consentement (let. a : inscription à une
+  classe et, si nécessaire, publicité), que tu peux retirer à tout moment ; pour
+  notre intérêt légitime à la sécurité du service et à la modération des
+  contenus (let. f).</p>
+
+  <h2>5. Destinataires</h2>
+  <table>
+    <tr><th>Fournisseur</th><th>Pour quoi</th><th>Où</th></tr>
+    <tr><td>Supabase</td><td>base de données, connexion, serveur de
+        l'application</td><td>Union européenne (Stockholm, Suède)</td></tr>
+    <tr><td>Google</td><td>connexion avec Google, Google Play, AdMob, synthèse
+        vocale</td><td>Union européenne et États-Unis</td></tr>
+    <tr><td>Apple</td><td>connexion avec Apple, App Store</td>
+        <td>Union européenne et États-Unis</td></tr>
+    <tr><td>xAI</td><td>leçon et vocabulaire magiques</td>
+        <td>États-Unis</td></tr>
+  </table>
+  <p>En outre, les autres utilisateurs voient ce que tu publies, et l'enseignant
+  d'une classe que tu as rejointe voit les progrès décrits ci-dessus. Nous ne
+  communiquons des données aux autorités que si la loi l'exige.</p>
+
+  <h2>6. Transferts à l'étranger</h2>
+  <p>La base de données se trouve dans l'Union européenne, que la Suisse
+  reconnaît comme offrant une protection adéquate. Pour les transferts vers les
+  États-Unis, nous nous fondons sur la certification des fournisseurs au Data
+  Privacy Framework UE-États-Unis et Suisse-États-Unis lorsqu'elle existe, et
+  sinon sur les clauses contractuelles types prévues dans leurs contrats.</p>
+
+  <h2>7. Durée de conservation</h2>
+  <ul>
+    <li>Les données du compte sont conservées tant que le compte existe. Si tu le
+    supprimes (Profil → Supprimer le compte), elles sont effacées après un délai
+    d'attente de 30 jours pendant lequel tu peux changer d'avis. Les contenus que
+    tu avais rendus publics restent disponibles, mais anonymes. Détails sur la
+    <a href="account-deletion.html" data-keep-lang>page consacrée à la
+    suppression du compte</a>.</li>
+    <li>Les comptes invités sans connexion depuis 60 jours sont supprimés avec
+    leurs données.</li>
+    <li>Les textes envoyés pour la leçon magique restent environ un jour sur le
+    serveur, le temps de te livrer le résultat même si la connexion est
+    coupée.</li>
+    <li>Les signalements et messages que tu nous envoies sont conservés le temps
+    nécessaire pour les traiter et sont de toute façon supprimés avec ton
+    compte.</li>
+  </ul>
+
+  <h2>8. Tes droits</h2>
+  <p>Tu peux nous demander d'accéder à tes données, de les rectifier, de les
+  effacer, de les recevoir dans un format lisible par machine, d'en limiter le
+  traitement ou de t'y opposer, et retirer un consentement donné, en écrivant à
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.
+  Nous répondons dans un délai de 30 jours. Tu peux aussi t'adresser au Préposé
+  fédéral à la protection des données et à la transparence
+  (<a href="https://www.edoeb.admin.ch">www.edoeb.admin.ch</a>) ou, si tu vis
+  dans l'Union européenne, à l'autorité de contrôle de ton pays.</p>
+
+  <h2>9. Sécurité</h2>
+  <p>Les données circulent de manière chiffrée (HTTPS). Sur le serveur, chaque
+  utilisateur ne peut lire et modifier que ce qui lui appartient, et les clés des
+  fournisseurs restent sur le serveur, jamais dans l'application.</p>
+
+  <h2>10. Modifications</h2>
+  <p>Si cette politique change de manière importante, nous te le dirons dans
+  l'application. La date en haut indique la dernière version.</p>
+</article>
+
+<article lang="es">
+  <h1>Política de privacidad</h1>
+  <p class="updated">Última actualización: 11 de octubre de 2026</p>
+
+  <p>Esta política explica qué datos personales trata la app CosmoTrainer (para
+  Android e iOS), por qué lo hace y qué derechos tienes. Se aplican la Ley
+  federal suiza de protección de datos (LPD) y, para quienes usan la app desde la
+  Unión Europea o el Espacio Económico Europeo, el Reglamento General de
+  Protección de Datos (RGPD).</p>
+
+  <h2>1. Quién es el responsable</h2>
+  <p>Responsable del tratamiento: Marco Suffi, Zúrich, Suiza.<br>
+  Para cualquier pregunta sobre tus datos:
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.</p>
+  <p>Representante en la Unión Europea (art. 27 RGPD):
+  <span class="todo">NOMBRE Y DIRECCIÓN DEL REPRESENTANTE</span>.</p>
+
+  <h2>2. Edad mínima</h2>
+  <p>CosmoTrainer está destinada a personas de al menos <strong>14 años</strong>.
+  Al abrirla por primera vez, la app pregunta el mes y el año de nacimiento: no
+  los guarda, solo conserva la fecha en que declaraste tener la edad requerida.
+  Quien tenga menos de 14 años no puede usar la app.</p>
+
+  <h2>3. Qué datos tratamos y por qué</h2>
+  <ul>
+    <li><strong>Cuenta.</strong> Nombre de usuario; correo electrónico y
+    contraseña (guardada de forma que ni siquiera nosotros podemos leerla) si te
+    registras con correo, o la identidad que nos transmiten Google o Apple si
+    inicias sesión con ellos (con Apple puedes ocultar tu correo). También puedes
+    usar la app como invitado, sin correo. Sirven para que inicies sesión y para
+    guardar tu progreso.</li>
+    <li><strong>Perfil y estudio.</strong> Idiomas que estudias o enseñas,
+    nivel, rol (estudiante o profesor), vocabularios, ejercicios y lecciones que
+    creas, resultados de los entrenamientos y progreso en las palabras. Sirven
+    para que la app funcione y para proponerte contenidos adecuados.</li>
+    <li><strong>Contenidos públicos, comentarios y valoraciones.</strong> Lo que
+    decides publicar lo ven los demás usuarios junto con tu nombre de usuario.
+    También guardamos las denuncias que envías y los usuarios que bloqueas, para
+    moderar los contenidos.</li>
+    <li><strong>Clases.</strong> Si te unes a la clase de un profesor, este ve tu
+    nombre de usuario y tu progreso solo en los materiales asignados a la clase:
+    ejercicios completados y porcentaje de respuestas correctas, no el texto de
+    tus respuestas. Antes de unirte te pedimos el consentimiento y registramos su
+    fecha y versión. Puedes salir de la clase cuando quieras.</li>
+    <li><strong>Mensajes que nos envías</strong> desde la app, con el rol y los
+    idiomas del perfil, para entender el contexto.</li>
+    <li><strong>Suscripción Premium.</strong> El pago lo gestionan Google Play o
+    la App Store; nosotros solo recibimos el identificador de la compra, el plan y
+    la fecha de vencimiento, para activar Premium. Nunca vemos los datos de tu
+    tarjeta.</li>
+    <li><strong>Lección y vocabulario mágicos.</strong> Los textos y temas que
+    escribes para generarlos se envían, a través de nuestro servidor y sin tu
+    nombre ni tu correo, a xAI, el proveedor del modelo de inteligencia
+    artificial, que los procesa para producir palabras y preguntas.</li>
+    <li><strong>Lectura en voz alta.</strong> Las palabras y frases que se leen
+    se envían, a través de nuestro servidor y sin datos de tu cuenta, al servicio
+    de síntesis de voz de Google Cloud. El audio obtenido queda en nuestros
+    servidores y se reutiliza para cualquiera que pida el mismo texto. Sin
+    conexión, la app usa la voz del teléfono.</li>
+    <li><strong>Publicidad.</strong> Sin Premium, puedes desbloquear algunas
+    lecciones viendo un vídeo de Google AdMob. Los anuncios son <em>no
+    personalizados</em> y aptos para todas las edades; aun así, Google trata
+    datos técnicos del dispositivo (por ejemplo, la dirección IP y los
+    identificadores publicitarios) para mostrarlos, limitar su repetición y
+    prevenir el fraude. En Suiza, el EEE y el Reino Unido, el consentimiento se
+    pide con el formulario de Google antes del primer anuncio.</li>
+    <li><strong>Modo de voz.</strong> El reconocimiento de voz usa el servicio
+    del sistema operativo (Google en Android, Apple en iOS); la app solo recibe
+    el texto reconocido.</li>
+    <li><strong>En tu dispositivo.</strong> Una copia de tus datos para usar la
+    app sin conexión, tus preferencias y el recordatorio diario, una notificación
+    local que no pasa por ningún servidor.</li>
+  </ul>
+  <p>No usamos herramientas de análisis ni de elaboración de perfiles, y no
+  vendemos datos.</p>
+
+  <h2>4. Bases jurídicas</h2>
+  <p>Cuando se aplica el RGPD, tratamos los datos: para prestarte el servicio
+  que pides (art. 6.1.b: cuenta, estudio, clases, suscripción); con tu
+  consentimiento (art. 6.1.a: unirte a una clase y, cuando sea necesario, la
+  publicidad), que puedes retirar en cualquier momento; por nuestro interés
+  legítimo en la seguridad del servicio y la moderación de los contenidos
+  (art. 6.1.f).</p>
+
+  <h2>5. Destinatarios</h2>
+  <table>
+    <tr><th>Proveedor</th><th>Para qué</th><th>Dónde</th></tr>
+    <tr><td>Supabase</td><td>base de datos, inicio de sesión, servidor de la
+        app</td><td>Unión Europea (Estocolmo, Suecia)</td></tr>
+    <tr><td>Google</td><td>inicio de sesión con Google, Google Play, AdMob,
+        síntesis de voz</td><td>Unión Europea y Estados Unidos</td></tr>
+    <tr><td>Apple</td><td>inicio de sesión con Apple, App Store</td>
+        <td>Unión Europea y Estados Unidos</td></tr>
+    <tr><td>xAI</td><td>lección y vocabulario mágicos</td>
+        <td>Estados Unidos</td></tr>
+  </table>
+  <p>Además, los demás usuarios ven lo que publicas, y el profesor de una clase
+  a la que te has unido ve el progreso descrito arriba. Solo comunicamos datos a
+  las autoridades si la ley nos obliga.</p>
+
+  <h2>6. Transferencias internacionales</h2>
+  <p>La base de datos está en la Unión Europea, que Suiza reconoce como dotada de
+  una protección adecuada. Para las transferencias a Estados Unidos nos basamos
+  en la certificación de los proveedores en el Data Privacy Framework UE-EE. UU.
+  y Suiza-EE. UU., cuando existe, y en otro caso en las cláusulas contractuales
+  tipo previstas en sus contratos.</p>
+
+  <h2>7. Conservación</h2>
+  <ul>
+    <li>Los datos de la cuenta se conservan mientras exista la cuenta. Si la
+    eliminas (Perfil → Eliminar cuenta), se borran tras un periodo de espera de
+    30 días en el que puedes cambiar de opinión. Los contenidos que habías hecho
+    públicos siguen disponibles, pero anónimos. Detalles en la
+    <a href="account-deletion.html" data-keep-lang>página sobre la eliminación
+    de la cuenta</a>.</li>
+    <li>Las cuentas de invitado sin inicio de sesión desde hace 60 días se
+    eliminan con sus datos.</li>
+    <li>Los textos enviados para la lección mágica permanecen en el servidor
+    alrededor de un día, para poder entregarte el resultado aunque se corte la
+    conexión.</li>
+    <li>Las denuncias y los mensajes que nos envías se conservan mientras sean
+    necesarios para gestionarlos y, en cualquier caso, se eliminan con tu
+    cuenta.</li>
+  </ul>
+
+  <h2>8. Tus derechos</h2>
+  <p>Puedes pedirnos acceder a tus datos, rectificarlos, suprimirlos,
+  recibirlos en un formato legible por máquina, limitar su tratamiento u
+  oponerte a él, y retirar un consentimiento dado, escribiendo a
+  <a href="mailto:support@cosmo-trainer.com">support@cosmo-trainer.com</a>.
+  Respondemos en un plazo de 30 días. También puedes dirigirte al Comisionado
+  Federal de Protección de Datos e Información de Suiza
+  (<a href="https://www.edoeb.admin.ch">www.edoeb.admin.ch</a>) o, si vives en
+  la Unión Europea, a la autoridad de control de tu país.</p>
+
+  <h2>9. Seguridad</h2>
+  <p>Los datos viajan cifrados (HTTPS). En el servidor cada usuario solo puede
+  leer y modificar lo que le pertenece, y las claves de los proveedores
+  permanecen en el servidor, nunca en la app.</p>
+
+  <h2>10. Cambios</h2>
+  <p>Si esta política cambia de forma relevante, te lo diremos en la app. La
+  fecha de arriba indica la última versión.</p>
+</article>
 
 </main>
+
+<footer>
+  <nav>
+    <a href="terms.html" data-keep-lang data-ui="terms">Termini d'uso</a>
+    <a href="account-deletion.html" data-keep-lang data-ui="deletion">Eliminazione account</a>
+  </nav>
+  © CosmoTrainer
+</footer>
+
+<script>
+  (function () {
+    var PAGE = 'privacy';
+    var LANGS = [
+      { c: 'it', f: '🇮🇹', n: 'Italiano' },
+      { c: 'en', f: '🇬🇧', n: 'English' },
+      { c: 'de', f: '🇩🇪', n: 'Deutsch' },
+      { c: 'fr', f: '🇫🇷', n: 'Français' },
+      { c: 'es', f: '🇪🇸', n: 'Español' }
+    ];
+    var UI = {
+      it: { lang: 'Lingua', privacy: 'Informativa sulla privacy', terms: "Termini d'uso", deletion: 'Eliminazione account' },
+      en: { lang: 'Language', privacy: 'Privacy Policy', terms: 'Terms of Use', deletion: 'Account deletion' },
+      de: { lang: 'Sprache', privacy: 'Datenschutzerklärung', terms: 'Nutzungsbedingungen', deletion: 'Konto löschen' },
+      fr: { lang: 'Langue', privacy: 'Politique de confidentialité', terms: "Conditions d'utilisation", deletion: 'Suppression du compte' },
+      es: { lang: 'Idioma', privacy: 'Política de privacidad', terms: 'Condiciones de uso', deletion: 'Eliminación de la cuenta' }
+    };
+    var TICK = '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>';
+    var root = document.documentElement;
+    var btn = document.getElementById('langBtn');
+    var list = document.getElementById('langList');
+
+    function save(c) { try { localStorage.setItem('ct_lang', c); } catch (e) {} }
+
+    // la lingua scelta vale per tutto il sito: la ricordano il browser
+    // e i link verso le altre pagine
+    function apply(c, fromMenu) {
+      var d = UI[c];
+      root.setAttribute('data-lang', c);
+      root.lang = c;
+      document.title = 'CosmoTrainer – ' + d[PAGE];
+      btn.setAttribute('aria-label', d.lang);
+      document.getElementById('langCur').textContent =
+        LANGS.filter(function (l) { return l.c === c; })[0].n;
+      Array.prototype.forEach.call(list.children, function (li) {
+        li.setAttribute('aria-selected', String(li.getAttribute('data-c') === c));
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('[data-ui]'), function (el) {
+        el.textContent = d[el.getAttribute('data-ui')];
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('a[data-keep-lang]'), function (a) {
+        a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + c);
+      });
+      save(c);
+      if (fromMenu) {
+        try { history.replaceState(null, '', location.pathname + '?lang=' + c); } catch (e) {}
+      }
+    }
+
+    function openList() {
+      list.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      var sel = list.querySelector('[aria-selected="true"] button');
+      if (sel) sel.focus();
+    }
+    function closeList() {
+      list.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    LANGS.forEach(function (l) {
+      var li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.setAttribute('data-c', l.c);
+      li.innerHTML = '<button type="button"><span class="fl">' + l.f + '</span><span>' + l.n + '</span>' + TICK + '</button>';
+      li.firstChild.addEventListener('click', function () {
+        apply(l.c, true);
+        closeList();
+        btn.focus();
+      });
+      list.appendChild(li);
+    });
+    btn.addEventListener('click', function () { if (list.hidden) openList(); else closeList(); });
+    document.addEventListener('click', function (e) {
+      if (!document.getElementById('langMenu').contains(e.target)) closeList();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !list.hidden) { closeList(); btn.focus(); }
+    });
+    list.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      var b = Array.prototype.slice.call(list.querySelectorAll('button'));
+      var i = b.indexOf(document.activeElement);
+      b[(i + (e.key === 'ArrowDown' ? 1 : -1) + b.length) % b.length].focus();
+    });
+
+    apply(root.getAttribute('data-lang'), false);
+  })();
+</script>
 </body>
 </html>

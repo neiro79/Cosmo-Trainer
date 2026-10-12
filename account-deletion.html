@@ -1,117 +1,470 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CosmoTrainer — Eliminazione account / Account deletion</title>
+<title>CosmoTrainer – Eliminazione account</title>
+<meta name="description" content="Come eliminare l'account CosmoTrainer e i dati collegati.">
+<!-- fuori dai risultati dei motori di ricerca: la pagina resta pubblica
+     (la aprono l'app e gli store), ma non va cercata. Non va bloccata
+     anche in robots.txt, o il motore non leggerebbe questa riga -->
+<meta name="robots" content="noindex">
+<!--
+  Si carica nella radice del sito, accanto a index.html:
+  https://www.cosmo-trainer.com/account-deletion.html
+  È l'indirizzo da dare a Google Play (Sicurezza dei dati → eliminazione
+  dell'account).
+
+  La lingua è quella scelta sul sito: index.html la passa con ?lang= e la
+  salva nel browser (ct_lang); l'app la passa con ?lang=. Senza nessuna
+  delle due vale quella del browser, e altrimenti l'inglese.
+-->
+<script>
+  (function () {
+    var ok = { it: 1, en: 1, de: 1, fr: 1, es: 1 }, c = null;
+    try { c = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+    if (!ok[c]) { try { c = localStorage.getItem('ct_lang'); } catch (e) {} }
+    if (!ok[c]) c = (navigator.language || '').slice(0, 2).toLowerCase();
+    if (!ok[c]) c = 'en';
+    document.documentElement.setAttribute('data-lang', c);
+    document.documentElement.lang = c;
+  })();
+</script>
 <style>
-  :root { color-scheme: dark; }
+  :root {
+    --bg: #070a1c; --bg-2: #0e1333;
+    --card: rgba(255,255,255,.06); --border: rgba(255,255,255,.12);
+    --text: #eef0ff; --muted: #a9afd6;
+    --accent: #7c5cff; --accent-2: #2dd4ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    margin: 0; padding: 32px 20px;
-    background: #0B1022; color: #E3E5F5;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    line-height: 1.6;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(124,92,255,.35), transparent 60%),
+      radial-gradient(700px 400px at 0% 20%, rgba(45,212,255,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg), var(--bg-2));
+    background-attachment: fixed;
+    color: var(--text); line-height: 1.65; min-height: 100vh;
+    overflow-wrap: break-word;
   }
-  main { max-width: 720px; margin: 0 auto; }
-  h1 { color: #F2B33D; font-size: 1.6rem; margin-bottom: 4px; }
-  h2 { color: #B8A3FF; font-size: 1.1rem; margin-top: 32px; }
-  a { color: #8EB4FF; }
-  ul { padding-left: 20px; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 22px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem;
+          color: var(--text); text-decoration: none; }
+  .logo-dot { width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 70%);
+    box-shadow: 0 0 18px rgba(124,92,255,.7); }
+
+  /* il menu delle lingue, lo stesso di index.html */
+  .lang-menu { position: relative; }
+  .lang-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text); font: inherit;
+    font-size: .92rem; font-weight: 600; cursor: pointer; }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"] { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.1); }
+  .lang-btn:focus-visible, .lang-list button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  .ico-tr { width: 20px; height: 20px; flex: none; }
+  .lang-btn .chev { width: 18px; height: 18px; color: var(--muted); transition: transform .15s; }
+  .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .lang-list { position: absolute; right: 0; top: calc(100% + 8px); min-width: 200px; list-style: none; padding: 6px;
+    border-radius: 14px; background: #141a45; border: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,.5); z-index: 50; }
+  .lang-list[hidden] { display: none; }
+  .lang-list button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0;
+    border-radius: 10px; background: transparent; color: var(--text); font: inherit; font-size: .95rem; text-align: left; cursor: pointer; }
+  .lang-list button:hover { background: rgba(255,255,255,.08); }
+  .lang-list li[aria-selected="true"] button { background: rgba(124,92,255,.22); font-weight: 700; }
+  .lang-list .fl { font-size: 1.15rem; }
+  .lang-list .tick { margin-left: auto; width: 18px; height: 18px; color: var(--accent-2); visibility: hidden; }
+  .lang-list li[aria-selected="true"] .tick { visibility: visible; }
+
+  /* una lingua alla volta; senza JavaScript si vedono tutte */
+  html[data-lang] article[lang] { display: none; }
+  html[data-lang="it"] article[lang="it"], html[data-lang="en"] article[lang="en"],
+  html[data-lang="de"] article[lang="de"], html[data-lang="fr"] article[lang="fr"],
+  html[data-lang="es"] article[lang="es"] { display: block; }
+
+  main { padding: 10px 0 60px; }
+  article { background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+            padding: 28px 24px; margin-bottom: 28px; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.2; margin-bottom: 6px; }
+  h2 { font-size: 1.1rem; color: var(--accent-2); margin: 28px 0 8px; }
+  p + p { margin-top: 10px; }
+  ul { padding-left: 20px; margin-top: 6px; }
   li { margin: 6px 0; }
-  .box {
-    background: rgba(255,255,255,0.045);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px; padding: 16px 18px; margin-top: 16px;
-  }
-  .muted { color: #9095B8; font-size: 0.9rem; }
-  /* i segnaposti da compilare prima di pubblicare la pagina */
+  a { color: var(--accent-2); }
+  .updated { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .95rem; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--border);
+           overflow-wrap: anywhere; }
+  th { color: var(--muted); font-weight: 600; }
+  .box { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+         margin-top: 14px; background: rgba(124,92,255,.10); }
   .todo { background: #F2B33D; color: #0B1022; padding: 0 4px; border-radius: 4px; }
-  hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 40px 0; }
+  footer { color: var(--muted); font-size: .85rem; text-align: center; padding: 0 0 40px; }
+  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-bottom: 8px; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); text-decoration: underline; }
 </style>
 </head>
 <body>
-<main>
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html" data-keep-lang><span class="logo-dot"></span>CosmoTrainer</a>
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="langList">
+        <svg class="ico-tr" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+        <span id="langCur"></span>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <ul class="lang-list" id="langList" role="listbox" hidden></ul>
+    </div>
+  </div>
+</header>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Richiesta di eliminazione dell'account e dei dati</p>
+<main class="wrap">
+
+<article lang="it">
+  <h1>Eliminazione dell'account</h1>
+  <p class="updated">Ultimo aggiornamento: 11 ottobre 2026</p>
 
   <h2>Come eliminare il tuo account</h2>
-  <p>Puoi eliminare l'account direttamente dall'app:</p>
+  <p>Puoi eliminarlo direttamente dall'app:</p>
   <ul>
     <li>apri <strong>CosmoTrainer</strong>;</li>
     <li>vai nella scheda <strong>Profilo</strong>;</li>
     <li>tocca <strong>Elimina account</strong> in fondo alla pagina e conferma.</li>
   </ul>
-
   <div class="box">
     <p>Se non riesci ad accedere all'app, scrivi a
-    <strong><a href="mailto:INDIRIZZO@ESEMPIO.IT"><span class="todo">INDIRIZZO@ESEMPIO.IT</span></a></strong>
-    dall'indirizzo email con cui ti sei registrato, indicando come oggetto
-    “Eliminazione account”. Daremo seguito alla richiesta entro 30 giorni.</p>
+    <a href="mailto:support@cosmo-trainer.com?subject=Eliminazione%20account">support@cosmo-trainer.com</a>
+    dall'indirizzo email con cui ti sei registrato, con oggetto «Eliminazione
+    account». Daremo seguito alla richiesta entro 30 giorni.</p>
   </div>
 
-  <h2>Cosa viene eliminato</h2>
+  <h2>Che cosa viene eliminato</h2>
   <ul>
-    <li>i tuoi vocabolari privati, con le parole e le frasi che contengono;</li>
-    <li>i tuoi progressi di apprendimento, i risultati degli allenamenti e le statistiche;</li>
-    <li>i commenti e le valutazioni che hai lasciato;</li>
-    <li>il tuo profilo (nome utente, preferenze) e le credenziali di accesso.</li>
+    <li>i tuoi vocabolari, esercizi e lezioni privati, con tutto ciò che
+    contengono;</li>
+    <li>i progressi, i risultati degli allenamenti e le statistiche;</li>
+    <li>i commenti e i voti che hai lasciato, le segnalazioni inviate e gli
+    utenti bloccati;</li>
+    <li>le iscrizioni alle classi e, se insegni, le tue classi;</li>
+    <li>il profilo (nome utente, preferenze), le credenziali di accesso e i dati
+    dell'abbonamento collegati all'account.</li>
   </ul>
 
-  <h2>Cosa viene conservato</h2>
-  <p>I vocabolari che hai scelto di rendere <strong>pubblici</strong> restano
-  disponibili agli altri utenti che li stanno studiando, ma vengono resi
-  <strong>anonimi</strong>: viene rimosso ogni collegamento con il tuo account
-  e il tuo nome utente non è più associato ad essi.</p>
+  <h2>Che cosa resta</h2>
+  <p>I contenuti che avevi reso <strong>pubblici</strong> restano disponibili
+  agli altri utenti che li stanno studiando, ma diventano <strong>anonimi</strong>:
+  ogni collegamento con il tuo account viene rimosso e il tuo nome utente non vi
+  è più associato.</p>
 
   <h2>Tempi</h2>
   <p>Dopo la richiesta l'account entra in un periodo di attesa di
-  <strong>30 giorni</strong>, durante il quale puoi annullare la cancellazione
-  dalla schermata Profilo dell'app. Trascorso tale periodo,
-  l'eliminazione è definitiva e i dati non sono più recuperabili.</p>
+  <strong>30 giorni</strong>, durante il quale puoi annullare l'eliminazione
+  dalla schermata Profilo. Trascorso questo periodo l'eliminazione è definitiva e
+  i dati non sono più recuperabili.</p>
 
-  <hr>
+  <h2>Abbonamento Premium</h2>
+  <p>Eliminare l'account non disdice l'abbonamento: va disdetto nelle
+  impostazioni degli abbonamenti di Google Play o dell'App Store.</p>
+</article>
 
-  <h1>CosmoTrainer</h1>
-  <p class="muted">Account and data deletion request</p>
+<article lang="en">
+  <h1>Account deletion</h1>
+  <p class="updated">Last updated: October 11, 2026</p>
 
   <h2>How to delete your account</h2>
-  <p>You can delete your account from within the app: open
-  <strong>CosmoTrainer</strong>, go to the <strong>Profile</strong> tab, tap
-  <strong>Delete account</strong> at the bottom and confirm.</p>
-
+  <p>You can delete it from within the app:</p>
+  <ul>
+    <li>open <strong>CosmoTrainer</strong>;</li>
+    <li>go to the <strong>Profile</strong> tab;</li>
+    <li>tap <strong>Delete account</strong> at the bottom and confirm.</li>
+  </ul>
   <div class="box">
     <p>If you cannot access the app, email
-    <strong><a href="mailto:INDIRIZZO@ESEMPIO.IT"><span class="todo">INDIRIZZO@ESEMPIO.IT</span></a></strong>
-    from the address you registered with, using the subject
-    “Account deletion”. Requests are handled within 30 days.</p>
+    <a href="mailto:support@cosmo-trainer.com?subject=Account%20deletion">support@cosmo-trainer.com</a>
+    from the address you registered with, using the subject “Account deletion”.
+    Requests are handled within 30 days.</p>
   </div>
 
   <h2>What is deleted</h2>
   <ul>
-    <li>your private vocabularies, including their words and sentences;</li>
-    <li>your learning progress, training results and statistics;</li>
-    <li>comments and ratings you left;</li>
-    <li>your profile (username, preferences) and sign-in credentials.</li>
+    <li>your private vocabularies, exercises and lessons, with everything they
+    contain;</li>
+    <li>your progress, training results and statistics;</li>
+    <li>comments and ratings you left, reports you sent and users you
+    blocked;</li>
+    <li>your class memberships and, if you teach, your classes;</li>
+    <li>your profile (username, preferences), sign-in credentials and the
+    subscription data linked to the account.</li>
   </ul>
 
   <h2>What is kept</h2>
-  <p>Vocabularies you chose to make <strong>public</strong> remain available to
-  other users who are studying them, but they are <strong>anonymised</strong>:
-  every link to your account is removed and your username is no longer
-  associated with them.</p>
+  <p>Content you chose to make <strong>public</strong> remains available to
+  other users who are studying it, but it is <strong>anonymised</strong>: every
+  link to your account is removed and your username is no longer associated
+  with it.</p>
 
   <h2>Timing</h2>
   <p>After the request, the account enters a <strong>30-day</strong> waiting
-  period, during which you can cancel the deletion from the app's Profile screen.
+  period, during which you can cancel the deletion from the Profile screen.
   After that, deletion is permanent and data cannot be recovered.</p>
 
-  <p class="muted" style="margin-top:40px">
-    Ultimo aggiornamento / Last updated: <span class="todo">DATA</span><br>
-    <a href="privacy.html">Informativa privacy / Privacy Policy</a> ·
-    <a href="terms.html">Termini d'uso / Terms of Use</a>
-  </p>
+  <h2>Premium subscription</h2>
+  <p>Deleting your account does not cancel your subscription: cancel it in the
+  Google Play or App Store subscription settings.</p>
+</article>
+
+<article lang="de">
+  <h1>Konto löschen</h1>
+  <p class="updated">Zuletzt aktualisiert: 11. Oktober 2026</p>
+
+  <h2>So löschst du dein Konto</h2>
+  <p>Du kannst es direkt in der App löschen:</p>
+  <ul>
+    <li>öffne <strong>CosmoTrainer</strong>;</li>
+    <li>geh zum Tab <strong>Profil</strong>;</li>
+    <li>tippe unten auf der Seite auf <strong>Konto löschen</strong> und
+    bestätige.</li>
+  </ul>
+  <div class="box">
+    <p>Wenn du nicht auf die App zugreifen kannst, schreib von der E-Mail-Adresse,
+    mit der du dich registriert hast, an
+    <a href="mailto:support@cosmo-trainer.com?subject=Konto%20l%C3%B6schen">support@cosmo-trainer.com</a>,
+    mit dem Betreff „Konto löschen“. Wir bearbeiten die Anfrage innerhalb von
+    30 Tagen.</p>
+  </div>
+
+  <h2>Was gelöscht wird</h2>
+  <ul>
+    <li>deine privaten Wortschätze, Übungen und Lektionen mit allem, was sie
+    enthalten;</li>
+    <li>deine Fortschritte, Trainingsergebnisse und Statistiken;</li>
+    <li>deine Kommentare und Bewertungen, gesendete Meldungen und blockierte
+    Nutzer;</li>
+    <li>deine Klassenmitgliedschaften und, wenn du unterrichtest, deine
+    Klassen;</li>
+    <li>dein Profil (Benutzername, Einstellungen), deine Anmeldedaten und die mit
+    dem Konto verknüpften Abo-Daten.</li>
+  </ul>
+
+  <h2>Was bleibt</h2>
+  <p>Inhalte, die du <strong>veröffentlicht</strong> hattest, bleiben für andere
+  Nutzer, die damit lernen, verfügbar, werden aber <strong>anonymisiert</strong>:
+  Jede Verbindung zu deinem Konto wird entfernt, und dein Benutzername ist nicht
+  mehr damit verknüpft.</p>
+
+  <h2>Fristen</h2>
+  <p>Nach der Anfrage beginnt eine Wartezeit von <strong>30 Tagen</strong>, in
+  der du die Löschung im Profil rückgängig machen kannst. Danach ist die Löschung
+  endgültig und die Daten lassen sich nicht wiederherstellen.</p>
+
+  <h2>Premium-Abo</h2>
+  <p>Das Löschen des Kontos kündigt das Abo nicht: Kündige es in den
+  Abo-Einstellungen von Google Play oder des App Store.</p>
+</article>
+
+<article lang="fr">
+  <h1>Suppression du compte</h1>
+  <p class="updated">Dernière mise à jour : 11 octobre 2026</p>
+
+  <h2>Comment supprimer ton compte</h2>
+  <p>Tu peux le supprimer directement dans l'application :</p>
+  <ul>
+    <li>ouvre <strong>CosmoTrainer</strong> ;</li>
+    <li>va dans l'onglet <strong>Profil</strong> ;</li>
+    <li>touche <strong>Supprimer le compte</strong> en bas de la page et
+    confirme.</li>
+  </ul>
+  <div class="box">
+    <p>Si tu ne peux pas accéder à l'application, écris à
+    <a href="mailto:support@cosmo-trainer.com?subject=Suppression%20du%20compte">support@cosmo-trainer.com</a>
+    depuis l'adresse e-mail avec laquelle tu t'es inscrit, avec l'objet
+    « Suppression du compte ». Nous traitons la demande dans un délai de
+    30 jours.</p>
+  </div>
+
+  <h2>Ce qui est supprimé</h2>
+  <ul>
+    <li>tes vocabulaires, exercices et leçons privés, avec tout leur
+    contenu ;</li>
+    <li>tes progrès, les résultats de tes entraînements et tes
+    statistiques ;</li>
+    <li>les commentaires et notes que tu as laissés, les signalements envoyés et
+    les utilisateurs bloqués ;</li>
+    <li>tes inscriptions aux classes et, si tu enseignes, tes classes ;</li>
+    <li>ton profil (nom d'utilisateur, préférences), tes identifiants de
+    connexion et les données d'abonnement liées au compte.</li>
+  </ul>
+
+  <h2>Ce qui reste</h2>
+  <p>Les contenus que tu avais rendus <strong>publics</strong> restent
+  disponibles pour les autres utilisateurs qui les étudient, mais deviennent
+  <strong>anonymes</strong> : tout lien avec ton compte est supprimé et ton nom
+  d'utilisateur n'y est plus associé.</p>
+
+  <h2>Délais</h2>
+  <p>Après la demande, le compte entre dans une période d'attente de
+  <strong>30 jours</strong> pendant laquelle tu peux annuler la suppression
+  depuis l'écran Profil. Passé ce délai, la suppression est définitive et les
+  données ne peuvent plus être récupérées.</p>
+
+  <h2>Abonnement Premium</h2>
+  <p>Supprimer le compte ne résilie pas l'abonnement : résilie-le dans les
+  réglages d'abonnement de Google Play ou de l'App Store.</p>
+</article>
+
+<article lang="es">
+  <h1>Eliminación de la cuenta</h1>
+  <p class="updated">Última actualización: 11 de octubre de 2026</p>
+
+  <h2>Cómo eliminar tu cuenta</h2>
+  <p>Puedes eliminarla directamente desde la app:</p>
+  <ul>
+    <li>abre <strong>CosmoTrainer</strong>;</li>
+    <li>ve a la pestaña <strong>Perfil</strong>;</li>
+    <li>toca <strong>Eliminar cuenta</strong> al final de la página y
+    confirma.</li>
+  </ul>
+  <div class="box">
+    <p>Si no puedes acceder a la app, escribe a
+    <a href="mailto:support@cosmo-trainer.com?subject=Eliminaci%C3%B3n%20de%20la%20cuenta">support@cosmo-trainer.com</a>
+    desde la dirección de correo con la que te registraste, con el asunto
+    «Eliminación de la cuenta». Atenderemos la solicitud en un plazo de
+    30 días.</p>
+  </div>
+
+  <h2>Qué se elimina</h2>
+  <ul>
+    <li>tus vocabularios, ejercicios y lecciones privados, con todo su
+    contenido;</li>
+    <li>tu progreso, los resultados de los entrenamientos y las
+    estadísticas;</li>
+    <li>los comentarios y valoraciones que dejaste, las denuncias enviadas y los
+    usuarios bloqueados;</li>
+    <li>tus inscripciones a clases y, si enseñas, tus clases;</li>
+    <li>tu perfil (nombre de usuario, preferencias), tus credenciales de acceso y
+    los datos de suscripción vinculados a la cuenta.</li>
+  </ul>
+
+  <h2>Qué se conserva</h2>
+  <p>Los contenidos que habías hecho <strong>públicos</strong> siguen
+  disponibles para los demás usuarios que los estudian, pero se vuelven
+  <strong>anónimos</strong>: se elimina cualquier vínculo con tu cuenta y tu
+  nombre de usuario deja de estar asociado a ellos.</p>
+
+  <h2>Plazos</h2>
+  <p>Tras la solicitud, la cuenta entra en un periodo de espera de
+  <strong>30 días</strong> durante el cual puedes cancelar la eliminación desde
+  la pantalla Perfil. Pasado ese periodo, la eliminación es definitiva y los
+  datos ya no se pueden recuperar.</p>
+
+  <h2>Suscripción Premium</h2>
+  <p>Eliminar la cuenta no cancela la suscripción: cancélala en los ajustes de
+  suscripciones de Google Play o de la App Store.</p>
+</article>
 
 </main>
+
+<footer>
+  <nav>
+    <a href="privacy.html" data-keep-lang data-ui="privacy">Informativa sulla privacy</a>
+    <a href="terms.html" data-keep-lang data-ui="terms">Termini d'uso</a>
+  </nav>
+  © CosmoTrainer
+</footer>
+
+<script>
+  (function () {
+    var PAGE = 'deletion';
+    var LANGS = [
+      { c: 'it', f: '🇮🇹', n: 'Italiano' },
+      { c: 'en', f: '🇬🇧', n: 'English' },
+      { c: 'de', f: '🇩🇪', n: 'Deutsch' },
+      { c: 'fr', f: '🇫🇷', n: 'Français' },
+      { c: 'es', f: '🇪🇸', n: 'Español' }
+    ];
+    var UI = {
+      it: { lang: 'Lingua', privacy: 'Informativa sulla privacy', terms: "Termini d'uso", deletion: 'Eliminazione account' },
+      en: { lang: 'Language', privacy: 'Privacy Policy', terms: 'Terms of Use', deletion: 'Account deletion' },
+      de: { lang: 'Sprache', privacy: 'Datenschutzerklärung', terms: 'Nutzungsbedingungen', deletion: 'Konto löschen' },
+      fr: { lang: 'Langue', privacy: 'Politique de confidentialité', terms: "Conditions d'utilisation", deletion: 'Suppression du compte' },
+      es: { lang: 'Idioma', privacy: 'Política de privacidad', terms: 'Condiciones de uso', deletion: 'Eliminación de la cuenta' }
+    };
+    var TICK = '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>';
+    var root = document.documentElement;
+    var btn = document.getElementById('langBtn');
+    var list = document.getElementById('langList');
+
+    function save(c) { try { localStorage.setItem('ct_lang', c); } catch (e) {} }
+
+    // la lingua scelta vale per tutto il sito: la ricordano il browser
+    // e i link verso le altre pagine
+    function apply(c, fromMenu) {
+      var d = UI[c];
+      root.setAttribute('data-lang', c);
+      root.lang = c;
+      document.title = 'CosmoTrainer – ' + d[PAGE];
+      btn.setAttribute('aria-label', d.lang);
+      document.getElementById('langCur').textContent =
+        LANGS.filter(function (l) { return l.c === c; })[0].n;
+      Array.prototype.forEach.call(list.children, function (li) {
+        li.setAttribute('aria-selected', String(li.getAttribute('data-c') === c));
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('[data-ui]'), function (el) {
+        el.textContent = d[el.getAttribute('data-ui')];
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('a[data-keep-lang]'), function (a) {
+        a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?lang=' + c);
+      });
+      save(c);
+      if (fromMenu) {
+        try { history.replaceState(null, '', location.pathname + '?lang=' + c); } catch (e) {}
+      }
+    }
+
+    function openList() {
+      list.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      var sel = list.querySelector('[aria-selected="true"] button');
+      if (sel) sel.focus();
+    }
+    function closeList() {
+      list.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    LANGS.forEach(function (l) {
+      var li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.setAttribute('data-c', l.c);
+      li.innerHTML = '<button type="button"><span class="fl">' + l.f + '</span><span>' + l.n + '</span>' + TICK + '</button>';
+      li.firstChild.addEventListener('click', function () {
+        apply(l.c, true);
+        closeList();
+        btn.focus();
+      });
+      list.appendChild(li);
+    });
+    btn.addEventListener('click', function () { if (list.hidden) openList(); else closeList(); });
+    document.addEventListener('click', function (e) {
+      if (!document.getElementById('langMenu').contains(e.target)) closeList();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !list.hidden) { closeList(); btn.focus(); }
+    });
+    list.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      var b = Array.prototype.slice.call(list.querySelectorAll('button'));
+      var i = b.indexOf(document.activeElement);
+      b[(i + (e.key === 'ArrowDown' ? 1 : -1) + b.length) % b.length].focus();
+    });
+
+    apply(root.getAttribute('data-lang'), false);
+  })();
+</script>
 </body>
 </html>
